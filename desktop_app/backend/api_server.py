@@ -7,14 +7,17 @@ import asyncio
 import logging
 from typing import Dict, Any, List, Optional
 from datetime import datetime, timedelta
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Depends, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_429_TOO_MANY_REQUESTS
 import uvicorn
 import json
 from pathlib import Path
 from .enhanced_database_manager import EnhancedDatabaseManager as DatabaseManager
 from .network_monitor import NetworkMonitor
+import time
 
 class CyberSnoopAPI:
     """FastAPI server for CyberSnoop dashboard"""
@@ -98,7 +101,35 @@ class CyberSnoopAPI:
             </html>
             """)
             
-        @self.app.get("/api/status")
+        security = HTTPBasic()
+        API_USERNAME = "admin"
+        API_PASSWORD = "cybersnoop2025"  # In production, use env vars or config
+        RATE_LIMIT = 30  # requests per minute per IP
+        rate_limit_cache = {}
+
+        def authenticate(credentials: HTTPBasicCredentials = Depends(security)):
+            if credentials.username != API_USERNAME or credentials.password != API_PASSWORD:
+                raise HTTPException(
+                    status_code=HTTP_401_UNAUTHORIZED,
+                    detail="Invalid authentication credentials",
+                    headers={"WWW-Authenticate": "Basic"},
+                )
+            return credentials.username
+
+        def rate_limiter(request: Request):
+            ip = request.client.host
+            now = int(time.time())
+            window = now // 60
+            key = f"{ip}:{window}"
+            count = rate_limit_cache.get(key, 0)
+            if count >= RATE_LIMIT:
+                raise HTTPException(
+                    status_code=HTTP_429_TOO_MANY_REQUESTS,
+                    detail="Rate limit exceeded. Try again later."
+                )
+            rate_limit_cache[key] = count + 1
+        
+        @self.app.get("/api/status", tags=["System"], dependencies=[Depends(authenticate), Depends(rate_limiter)])
         async def get_status():
             """Get system status"""
             try:
@@ -120,7 +151,7 @@ class CyberSnoopAPI:
                 logging.error(f"Error getting status: {e}")
                 return {"status": "error", "message": str(e)}
             
-        @self.app.get("/api/stats")
+        @self.app.get("/api/stats", tags=["Network"], dependencies=[Depends(authenticate), Depends(rate_limiter)])
         async def get_stats():
             """Get network statistics"""
             try:
@@ -152,7 +183,7 @@ class CyberSnoopAPI:
                 logging.error(f"Error getting stats: {e}")
                 return {"error": str(e)}
 
-        @self.app.get("/api/interfaces")
+        @self.app.get("/api/interfaces", tags=["Network"], dependencies=[Depends(authenticate), Depends(rate_limiter)])
         async def get_interfaces():
             """Get available network interfaces"""
             try:
@@ -164,9 +195,11 @@ class CyberSnoopAPI:
                 logging.error(f"Error getting interfaces: {e}")
                 return {"error": str(e)}
 
-        @self.app.get("/api/packets")
+        @self.app.get("/api/packets", tags=["Network"], dependencies=[Depends(authenticate), Depends(rate_limiter)])
         async def get_recent_packets(limit: int = 100):
             """Get recent captured packets"""
+            if limit < 1 or limit > 1000:
+                raise HTTPException(status_code=400, detail="Limit must be between 1 and 1000")
             try:
                 if self.database_manager:
                     packets = self.database_manager.get_recent_packets(limit)
@@ -176,9 +209,11 @@ class CyberSnoopAPI:
                 logging.error(f"Error getting packets: {e}")
                 return {"error": str(e)}
 
-        @self.app.get("/api/threats")
+        @self.app.get("/api/threats", tags=["Threats"], dependencies=[Depends(authenticate), Depends(rate_limiter)])
         async def get_recent_threats(limit: int = 50):
             """Get recent detected threats"""
+            if limit < 1 or limit > 500:
+                raise HTTPException(status_code=400, detail="Limit must be between 1 and 500")
             try:
                 if self.database_manager:
                     threats = self.database_manager.get_recent_threats(limit)
@@ -188,7 +223,7 @@ class CyberSnoopAPI:
                 logging.error(f"Error getting threats: {e}")
                 return {"error": str(e)}
 
-        @self.app.post("/api/monitoring/start")
+        @self.app.post("/api/monitoring/start", tags=["System"], dependencies=[Depends(authenticate), Depends(rate_limiter)])
         async def start_monitoring():
             """Start network monitoring"""
             try:
@@ -200,7 +235,7 @@ class CyberSnoopAPI:
                 logging.error(f"Error starting monitoring: {e}")
                 return {"error": str(e)}
 
-        @self.app.post("/api/monitoring/stop")
+        @self.app.post("/api/monitoring/stop", tags=["System"], dependencies=[Depends(authenticate), Depends(rate_limiter)])
         async def stop_monitoring():
             """Stop network monitoring"""
             try:

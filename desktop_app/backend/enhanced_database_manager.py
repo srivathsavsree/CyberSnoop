@@ -661,6 +661,200 @@ class EnhancedDatabaseManager:
             logging.info("Database connections closed")
         except Exception as e:
             logging.error(f"Error closing database: {e}")
+    
+    def get_packet_count(self) -> int:
+        """Get total number of packets stored"""
+        try:
+            if SQLALCHEMY_AVAILABLE:
+                with self.get_session() as session:
+                    count = session.query(PacketRecord).count()
+                    return count
+            else:
+                cursor = sqlite3.connect(self.db_path).cursor()
+                cursor.execute("SELECT COUNT(*) FROM packets")
+                result = cursor.fetchone()
+                return result[0] if result else 0
+        except Exception as e:
+            logging.error(f"Error getting packet count: {e}")
+            return 0
+
+    def get_threat_count(self) -> int:
+        """Get total number of threats detected"""
+        try:
+            if SQLALCHEMY_AVAILABLE:
+                with self.get_session() as session:
+                    count = session.query(ThreatRecord).count()
+                    return count
+            else:
+                cursor = sqlite3.connect(self.db_path).cursor()
+                cursor.execute("SELECT COUNT(*) FROM threats")
+                result = cursor.fetchone()
+                return result[0] if result else 0
+        except Exception as e:
+            logging.error(f"Error getting threat count: {e}")
+            return 0
+
+    def get_recent_packets(self, limit: int = 100, hours: int = 24) -> List[Dict[str, Any]]:
+        """Get recent packets from the database"""
+        try:
+            if SQLALCHEMY_AVAILABLE:
+                with self.get_session() as session:
+                    cutoff_time = datetime.utcnow() - timedelta(hours=hours)
+                    packets = session.query(PacketRecord)\
+                        .filter(PacketRecord.timestamp >= cutoff_time)\
+                        .order_by(PacketRecord.timestamp.desc())\
+                        .limit(limit)\
+                        .all()
+                    
+                    return [{
+                        'id': packet.id,
+                        'timestamp': packet.timestamp.isoformat() if packet.timestamp else '',
+                        'src_ip': packet.src_ip,
+                        'dst_ip': packet.dst_ip,
+                        'src_port': packet.src_port,
+                        'dst_port': packet.dst_port,
+                        'protocol': packet.protocol,
+                        'size': packet.size,
+                        'category': packet.category,
+                        'priority': packet.priority
+                    } for packet in packets]
+            else:
+                cursor = sqlite3.connect(self.db_path).cursor()
+                cutoff_time = (datetime.utcnow() - timedelta(hours=hours)).isoformat()
+                cursor.execute("""
+                    SELECT id, timestamp, src_ip, dst_ip, src_port, dst_port, 
+                           protocol, size, category, priority 
+                    FROM packets 
+                    WHERE timestamp >= ? 
+                    ORDER BY timestamp DESC 
+                    LIMIT ?
+                """, (cutoff_time, limit))
+                
+                results = cursor.fetchall()
+                return [{
+                    'id': row[0],
+                    'timestamp': row[1],
+                    'src_ip': row[2],
+                    'dst_ip': row[3],
+                    'src_port': row[4],
+                    'dst_port': row[5],
+                    'protocol': row[6],
+                    'size': row[7],
+                    'category': row[8],
+                    'priority': row[9]
+                } for row in results]
+        except Exception as e:
+            logging.error(f"Error getting recent packets: {e}")
+            return []
+
+    def get_recent_threats(self, limit: int = 50, hours: int = 24) -> List[Dict[str, Any]]:
+        """Get recent threats from the database"""
+        try:
+            if SQLALCHEMY_AVAILABLE:
+                with self.get_session() as session:
+                    cutoff_time = datetime.utcnow() - timedelta(hours=hours)
+                    threats = session.query(ThreatRecord)\
+                        .filter(ThreatRecord.timestamp >= cutoff_time)\
+                        .order_by(ThreatRecord.timestamp.desc())\
+                        .limit(limit)\
+                        .all()
+                    
+                    return [{
+                        'id': threat.id,
+                        'timestamp': threat.timestamp.isoformat() if threat.timestamp else '',
+                        'threat_type': threat.threat_type,
+                        'severity': threat.severity,
+                        'source_ip': threat.source_ip,
+                        'target_ip': threat.target_ip,
+                        'description': threat.description,
+                        'indicators': threat.indicators,
+                        'confidence': threat.confidence,
+                        'resolved': threat.resolved
+                    } for threat in threats]
+            else:
+                cursor = sqlite3.connect(self.db_path).cursor()
+                cutoff_time = (datetime.utcnow() - timedelta(hours=hours)).isoformat()
+                cursor.execute("""
+                    SELECT id, timestamp, threat_type, severity, source_ip, 
+                           target_ip, description, indicators, confidence, resolved 
+                    FROM threats 
+                    WHERE timestamp >= ? 
+                    ORDER BY timestamp DESC 
+                    LIMIT ?
+                """, (cutoff_time, limit))
+                
+                results = cursor.fetchall()
+                return [{
+                    'id': row[0],
+                    'timestamp': row[1],
+                    'threat_type': row[2],
+                    'severity': row[3],
+                    'source_ip': row[4],
+                    'target_ip': row[5],
+                    'description': row[6],
+                    'indicators': row[7],
+                    'confidence': row[8],
+                    'resolved': row[9]
+                } for row in results]
+        except Exception as e:
+            logging.error(f"Error getting recent threats: {e}")
+            return []
+
+    def get_threat_statistics(self, hours: int = 24) -> Dict[str, Any]:
+        """Get threat statistics for the specified time period"""
+        try:
+            if SQLALCHEMY_AVAILABLE:
+                with self.get_session() as session:
+                    cutoff_time = datetime.utcnow() - timedelta(hours=hours)
+                    
+                    total_threats = session.query(ThreatRecord)\
+                        .filter(ThreatRecord.timestamp >= cutoff_time)\
+                        .count()
+                    
+                    high_severity = session.query(ThreatRecord)\
+                        .filter(ThreatRecord.timestamp >= cutoff_time)\
+                        .filter(ThreatRecord.severity == 'high')\
+                        .count()
+                    
+                    threat_types = session.query(ThreatRecord.threat_type, 
+                                                func.count(ThreatRecord.threat_type))\
+                        .filter(ThreatRecord.timestamp >= cutoff_time)\
+                        .group_by(ThreatRecord.threat_type)\
+                        .all()
+                    
+                    return {
+                        'total_threats': total_threats,
+                        'high_severity': high_severity,
+                        'threat_types': dict(threat_types),
+                        'time_period_hours': hours
+                    }
+            else:
+                cursor = sqlite3.connect(self.db_path).cursor()
+                cutoff_time = (datetime.utcnow() - timedelta(hours=hours)).isoformat()
+                
+                cursor.execute("SELECT COUNT(*) FROM threats WHERE timestamp >= ?", (cutoff_time,))
+                total_threats = cursor.fetchone()[0]
+                
+                cursor.execute("SELECT COUNT(*) FROM threats WHERE timestamp >= ? AND severity = 'high'", (cutoff_time,))
+                high_severity = cursor.fetchone()[0]
+                
+                cursor.execute("SELECT threat_type, COUNT(*) FROM threats WHERE timestamp >= ? GROUP BY threat_type", (cutoff_time,))
+                threat_types = dict(cursor.fetchall())
+                
+                return {
+                    'total_threats': total_threats,
+                    'high_severity': high_severity,
+                    'threat_types': threat_types,
+                    'time_period_hours': hours
+                }
+        except Exception as e:
+            logging.error(f"Error getting threat statistics: {e}")
+            return {
+                'total_threats': 0,
+                'high_severity': 0,
+                'threat_types': {},
+                'time_period_hours': hours
+            }
 
 # Compatibility alias for existing code
 DatabaseManager = EnhancedDatabaseManager
