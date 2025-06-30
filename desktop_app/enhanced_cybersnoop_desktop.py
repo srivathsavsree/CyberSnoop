@@ -30,6 +30,14 @@ from backend.threat_detector import ThreatDetector
 from backend.api_server import CyberSnoopAPI
 from backend.advanced_threat_detector import AdvancedThreatDetector
 
+# Enterprise compatibility imports
+try:
+    from enterprise_compatibility import EnterpriseEnhancedCyberSnoop
+    ENTERPRISE_AVAILABLE = True
+except ImportError:
+    ENTERPRISE_AVAILABLE = False
+    print("Enterprise features not available - running in standard mode")
+
 class DashboardServer(QThread):
     """Thread to run the Next.js dashboard server"""
     server_ready = pyqtSignal()
@@ -91,35 +99,6 @@ class DashboardServer(QThread):
         if self.process:
             self.process.terminate()
             self.process.wait(timeout=5)
-            
-            # Start Next.js dev server
-            self.process = subprocess.Popen(
-                ["npm", "run", "dev"],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                universal_newlines=True
-            )
-            
-            self.running = True
-            
-            # Monitor server output
-            while self.running and self.process.poll() is None:
-                output = self.process.stdout.readline()
-                if output:
-                    print(f"Dashboard Server: {output.strip()}")
-                    if "ready" in output.lower() or "started" in output.lower():
-                        self.server_ready.emit()
-                
-                # Small delay to prevent high CPU usage
-                time.sleep(0.1)
-                
-        except Exception as e:
-            self.server_error.emit(f"Failed to start dashboard server: {str(e)}")
-    
-    def stop(self):
-        """Stop the dashboard server"""
-        self.running = False
-        if self.process:
             self.process.terminate()
             self.process.wait()
 
@@ -204,6 +183,19 @@ class EnhancedCyberSnoopApp(QMainWindow):
         self.network_monitor = NetworkMonitor(self.config_manager)
         self.threat_detector = ThreatDetector(self.config_manager, self.database_manager)
         self.advanced_threat_detector = AdvancedThreatDetector(self.config_manager)
+        
+        # Initialize enterprise components if available
+        self.enterprise = None
+        if ENTERPRISE_AVAILABLE:
+            try:
+                self.enterprise = EnterpriseEnhancedCyberSnoop(
+                    self.config_manager, 
+                    self.database_manager
+                )
+                print("✅ Enterprise features initialized successfully")
+            except Exception as e:
+                print(f"⚠️ Enterprise features failed to initialize: {e}")
+                self.enterprise = None
         
         # Server threads
         self.api_server_thread = None
@@ -358,6 +350,40 @@ class EnhancedCyberSnoopApp(QMainWindow):
         server_layout.addWidget(self.dashboard_status, 1, 1)
         
         layout.addWidget(server_group)
+        
+        # Enterprise Features Group (if available)
+        if self.enterprise:
+            enterprise_group = QGroupBox("Enterprise Features")
+            enterprise_layout = QGridLayout(enterprise_group)
+            
+            # SIEM Integration Status
+            siem_enabled = self.enterprise.enterprise_features.get('siem_integration', False)
+            self.siem_status = QLabel("🟢 Enabled" if siem_enabled else "🔴 Disabled")
+            enterprise_layout.addWidget(QLabel("SIEM:"), 0, 0)
+            enterprise_layout.addWidget(self.siem_status, 0, 1)
+            
+            # AI Detection Status
+            ai_enabled = self.enterprise.enterprise_features.get('ai_detection', False)
+            self.ai_status = QLabel("🟢 Enabled" if ai_enabled else "🔴 Disabled")
+            enterprise_layout.addWidget(QLabel("AI Detection:"), 1, 0)
+            enterprise_layout.addWidget(self.ai_status, 1, 1)
+            
+            # Compliance Reporting Status
+            compliance_enabled = self.enterprise.enterprise_features.get('compliance_reporting', False)
+            self.compliance_status = QLabel("🟢 Enabled" if compliance_enabled else "🔴 Disabled")
+            enterprise_layout.addWidget(QLabel("Compliance:"), 2, 0)
+            enterprise_layout.addWidget(self.compliance_status, 2, 1)
+            
+            # Enterprise Actions
+            self.ml_analysis_button = QPushButton("🤖 Run ML Analysis")
+            self.ml_analysis_button.clicked.connect(self.run_ml_analysis)
+            enterprise_layout.addWidget(self.ml_analysis_button, 3, 0, 1, 2)
+            
+            self.compliance_report_button = QPushButton("📋 Generate Reports")
+            self.compliance_report_button.clicked.connect(self.generate_compliance_reports)
+            enterprise_layout.addWidget(self.compliance_report_button, 4, 0, 1, 2)
+            
+            layout.addWidget(enterprise_group)
         
         # Add stretch to push everything to top
         layout.addStretch()
@@ -728,6 +754,15 @@ class EnhancedCyberSnoopApp(QMainWindow):
         self.stats['threats_detected'] += 1
         self.update_stats_display()
         
+        # Process with enterprise features if available
+        if self.enterprise:
+            try:
+                # Run in background to avoid blocking UI
+                import asyncio
+                asyncio.create_task(self.enterprise.process_enterprise_threat(threat_data))
+            except Exception as e:
+                print(f"Enterprise threat processing error: {e}")
+        
         # Show system tray notification
         if self.system_tray:
             self.system_tray.showMessage(
@@ -828,6 +863,91 @@ class EnhancedCyberSnoopApp(QMainWindow):
             self.database_manager.close()
             
         QApplication.quit()
+
+    def run_ml_analysis(self):
+        """Run machine learning analysis on recent packets"""
+        if not self.enterprise:
+            self.status_bar.showMessage("Enterprise features not available")
+            return
+        
+        try:
+            # Get recent packets from database
+            recent_packets = self.database_manager.get_recent_packets(limit=1000)
+            
+            if recent_packets:
+                # Run ML analysis in background
+                import asyncio
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                
+                anomalies = loop.run_until_complete(
+                    self.enterprise.run_ml_analysis(recent_packets)
+                )
+                
+                if anomalies:
+                    message = f"ML Analysis complete: {len(anomalies)} anomalies detected"
+                    self.status_bar.showMessage(message)
+                    
+                    # Show notification
+                    if self.system_tray:
+                        self.system_tray.showMessage(
+                            "CyberSnoop ML Analysis",
+                            message,
+                            QSystemTrayIcon.MessageIcon.Information,
+                            3000
+                        )
+                else:
+                    self.status_bar.showMessage("ML Analysis complete: No anomalies detected")
+            else:
+                self.status_bar.showMessage("No packet data available for analysis")
+                
+        except Exception as e:
+            error_msg = f"ML Analysis error: {str(e)}"
+            self.status_bar.showMessage(error_msg)
+            print(error_msg)
+    
+    def generate_compliance_reports(self):
+        """Generate compliance reports"""
+        if not self.enterprise:
+            self.status_bar.showMessage("Enterprise features not available")
+            return
+        
+        try:
+            reports = self.enterprise.generate_compliance_reports()
+            
+            if reports:
+                # Save reports to files
+                from datetime import datetime
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                
+                for report_type, report_data in reports.items():
+                    filename = f"compliance_report_{report_type}_{timestamp}.json"
+                    filepath = Path(__file__).parent / "reports" / filename
+                    
+                    # Create reports directory if it doesn't exist
+                    filepath.parent.mkdir(exist_ok=True)
+                    
+                    with open(filepath, 'w') as f:
+                        json.dump(report_data, f, indent=2)
+                
+                message = f"Generated {len(reports)} compliance reports"
+                self.status_bar.showMessage(message)
+                
+                # Show notification
+                if self.system_tray:
+                    self.system_tray.showMessage(
+                        "CyberSnoop Reports",
+                        message,
+                        QSystemTrayIcon.MessageIcon.Information,
+                        3000
+                    )
+            else:
+                self.status_bar.showMessage("No compliance reports generated")
+                
+        except Exception as e:
+            error_msg = f"Report generation error: {str(e)}"
+            self.status_bar.showMessage(error_msg)
+            print(error_msg)
 
 def main():
     """Main application entry point"""

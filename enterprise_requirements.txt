@@ -1,0 +1,45 @@
+# Enterprise CyberSnoop Requirements
+# Core dependencies (already included in main requirements)
+PySide6>=6.5.0
+requests>=2.31.0
+asyncio
+sqlite3
+
+# Machine Learning and AI
+scikit-learn>=1.3.0
+pandas>=2.0.0
+numpy>=1.24.0
+scipy>=1.10.0
+
+# SIEM Integrations
+splunk-sdk>=1.7.0
+elasticsearch>=8.8.0
+azure-monitor-query>=1.2.0
+boto3>=1.28.0  # for AWS integration
+
+# Additional Enterprise Features
+jsonschema>=4.17.0  # for data validation
+cryptography>=41.0.0  # for encryption
+pyjwt>=2.8.0  # for JWT tokens
+python-dateutil>=2.8.0
+pytz>=2023.3
+
+# Cloud providers (optional)
+azure-identity>=1.13.0
+azure-mgmt-network>=25.0.0
+google-cloud-logging>=3.5.0
+google-cloud-monitoring>=2.15.0
+
+# Compliance and reporting
+jinja2>=3.1.0  # for report templates
+matplotlib>=3.7.0  # for charts in reports
+reportlab>=4.0.0  # for PDF reports
+
+# Performance monitoring
+psutil>=5.9.0
+memory-profiler>=0.60.0
+
+# Development and testing (optional)
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+mock>=5.1.0
