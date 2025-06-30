@@ -1,0 +1,65 @@
+# Service Management Requirements
+# Flask web framework and extensions
+Flask==2.3.3
+Flask-SQLAlchemy==3.0.5
+Flask-Login==0.6.3
+Werkzeug==2.3.7
+
+# Database
+SQLAlchemy==2.0.21
+psycopg2-binary==2.9.7  # PostgreSQL adapter
+
+# HTTP requests and API
+requests==2.31.0
+urllib3==2.0.7
+
+# Billing and payments
+stripe==6.7.0
+
+# Email functionality
+smtplib2==0.2.1  # Built-in Python module, no package needed
+
+# System monitoring
+psutil==5.9.6
+
+# Task scheduling
+schedule==1.2.0
+
+# Date and time handling
+python-dateutil==2.8.2
+
+# JSON handling (built-in)
+# uuid (built-in)
+# logging (built-in)
+# sqlite3 (built-in)
+# threading (built-in)
+# time (built-in)
+# os (built-in)
+# sys (built-in)
+# subprocess (built-in)
+# pathlib (built-in)
+
+# Security and authentication
+bcrypt==4.0.1
+cryptography==41.0.7
+
+# Web server (production)
+gunicorn==21.2.0
+nginx  # Note: Install separately on system
+
+# Development tools
+python-dotenv==1.0.0
+pytest==7.4.3
+pytest-flask==1.3.0
+
+# Optional: Redis for caching
+redis==5.0.1
+
+# Optional: Celery for background tasks
+celery==5.3.4
+
+# Optional: Sentry for error tracking
+sentry-sdk==1.38.0
+
+# Optional: Prometheus for metrics
+prometheus-client==0.19.0

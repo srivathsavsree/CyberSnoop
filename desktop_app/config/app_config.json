@@ -1,0 +1,25 @@
+{
+    "app_name": "CyberSnoop",
+    "version": "1.0.0",
+    "free_version": true,
+    "all_features_enabled": true,
+    "network_monitoring": {
+        "enabled": true,
+        "interfaces": "auto-detect"
+    },
+    "threat_detection": {
+        "ai_ml_enabled": true,
+        "behavioral_analysis": true,
+        "anomaly_detection": true
+    },
+    "integrations": {
+        "siem_enabled": true,
+        "cloud_monitoring": true,
+        "compliance_reporting": true
+    },
+    "ui": {
+        "dashboard_enabled": true,
+        "system_tray": true,
+        "notifications": true
+    }
+}

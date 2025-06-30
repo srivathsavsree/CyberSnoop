@@ -1,0 +1,88 @@
+name: Build and Release CyberSnoop
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on version tags like v1.0.0
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+        
+    - name: Build executable
+      run: |
+        cd desktop_app
+        pyinstaller --onefile --windowed --name CyberSnoop enhanced_cybersnoop_desktop.py
+        
+    - name: Create installer (basic)
+      run: |
+        # For now, just rename the exe as a simple "installer"
+        copy desktop_app\dist\CyberSnoop.exe CyberSnoop-Setup.exe
+        
+    - name: Upload release asset
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./CyberSnoop-Setup.exe
+        asset_name: CyberSnoop-Setup.exe
+        asset_content_type: application/octet-stream
+        
+  create-release:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      
+    steps:
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: CyberSnoop ${{ github.ref }}
+        body: |
+          🛡️ CyberSnoop - Free Network Security Monitor
+          
+          ## What's New
+          - All features included and free
+          - No restrictions or limitations
+          - Complete network security monitoring
+          
+          ## 📥 Download
+          - Download `CyberSnoop-Setup.exe` below
+          - Run the installer
+          - Launch from desktop shortcut
+          
+          ## 🆓 All Features Free
+          ✅ Real-time Network Monitoring
+          ✅ AI-Powered Threat Detection  
+          ✅ SIEM Integration
+          ✅ Cloud Monitoring
+          ✅ Compliance Reporting
+          ✅ Professional Dashboard
+          
+          ## 🐛 Issues
+          Report bugs at: https://github.com/${{ github.repository }}/issues
+        draft: false
+        prerelease: false

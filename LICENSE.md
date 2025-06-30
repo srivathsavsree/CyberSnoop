@@ -2,24 +2,25 @@
 
 ## 🔍 Overview
 
-CyberSnoop uses a **dual licensing model** to balance open source community benefits with sustainable business development:
-
-- **🆓 Open Source Core** - MIT License (free for everyone)
-- **💼 Enterprise Features** - Commercial License (paid features)
+CyberSnoop is a **100% free and open-source** network security monitoring solution licensed under the MIT License. All features are available to everyone at no cost.
 
 ## 🆓 Open Source License (MIT)
 
-### Core Application Components
+### All Application Components
 
-The following components are licensed under the **MIT License**:
+All CyberSnoop components are licensed under the **MIT License**:
 
 ```
 ✅ Desktop Application Framework (PySide6 UI)
-✅ Basic Network Monitoring (packet capture)
-✅ Core Threat Detection (rule-based)
-✅ Database Storage (SQLite)
-✅ React Dashboard (basic features)
-✅ REST API Server (core endpoints)
+✅ Network Monitoring (packet capture & analysis)
+✅ AI/ML Threat Detection (machine learning algorithms)
+✅ SIEM Integrations (Splunk, Elasticsearch, QRadar, Sentinel)
+✅ Advanced Analytics (behavioral analysis & prediction)
+✅ Cloud Monitoring (AWS, Azure, GCP integrations)
+✅ Compliance Reporting (PCI DSS, HIPAA, GDPR)
+✅ Database Storage (SQLite & enterprise backends)
+✅ React Dashboard (all features included)
+✅ REST API Server (complete API access)
 ✅ Configuration Management
 ✅ Documentation and Examples
 ```
@@ -63,40 +64,26 @@ SOFTWARE.
 - 📋 **Include License** - Must include license text in distributions
 - 📋 **Include Copyright** - Must include copyright notice
 
-## 💼 Commercial License (Enterprise Features)
+## 🌟 Community-Driven Development
 
-### Enterprise Components
+CyberSnoop is developed and maintained by a community of security professionals and developers. All contributions are welcome!
 
-The following components require a **Commercial License**:
+### 🤝 Contributing
 
-```
-🔒 SIEM Integrations (Splunk, Elasticsearch, QRadar, Sentinel)
-🔒 AI/ML Threat Detection (machine learning algorithms)
-🔒 Advanced Analytics (behavioral analysis, prediction)
-🔒 Cloud Monitoring (AWS, Azure, GCP integrations)
-🔒 Compliance Reporting (PCI DSS, HIPAA, GDPR)
-🔒 Multi-tenant Architecture (enterprise deployment)
-🔒 Priority Support (24/7 technical support)
-🔒 Professional Services (implementation, training)
-```
+- **Bug Reports** - Help us improve by reporting issues
+- **Feature Requests** - Suggest new functionality
+- **Code Contributions** - Submit pull requests
+- **Documentation** - Help improve our guides and examples
+- **Community Support** - Help other users in forums and discussions
 
-### 💰 Commercial Licensing Tiers
+### � Support
 
-#### 🏢 **Professional License** - $99/month
-- SIEM integrations
-- AI/ML threat detection
-- Cloud monitoring
-- Email support
-- Single organization use
+- **Community Forums** - Get help from other users and developers
+- **GitHub Issues** - Report bugs and request features
+- **Documentation** - Comprehensive guides and examples
+- **Open Source** - No support tiers or restrictions
 
-#### 🏢 **Enterprise License** - $499/month
-- All Professional features
-- Multi-tenant support
-- Custom integrations
-- 24/7 support
-- Professional services
-- On-premises deployment
-- Service level agreement (SLA)
+All support is community-based and free. Professional consulting services may be available from third-party providers.
 
 #### 🤝 **MSSP Partner License** - Custom Pricing
 - White-label rights
@@ -110,14 +97,32 @@ The following components require a **Commercial License**:
 To obtain a commercial license:
 
 - **Sales**: sales@cybersnoop.com
-- **Phone**: +1-555-CYBER-01
-- **Website**: [cybersnoop.com/licensing](https://cybersnoop.com/licensing)
+## 📚 Third-Party Dependencies
+
+### Open Source Dependencies
+
+CyberSnoop uses these open source libraries:
+
+| Component | License | Usage |
+|-----------|---------|-------|
+| **PySide6** | LGPLv3 | Desktop UI framework |
+| **FastAPI** | MIT | REST API server |
+| **React** | MIT | Dashboard frontend |
+| **Scapy** | GPLv2 | Packet capture |
+| **SQLAlchemy** | MIT | Database ORM |
+| **pandas** | BSD | Data analysis |
+| **numpy** | BSD | Numerical computing |
+| **scikit-learn** | BSD | Machine learning |
+| **elasticsearch-py** | Apache 2.0 | SIEM integration |
+| **requests** | Apache 2.0 | HTTP client |
+
+All dependencies are free and open source. No commercial licenses are required.
 
 ## 🔄 License Compatibility
 
-### ✅ Compatible with CyberSnoop Core
+### ✅ Compatible Licenses
 
-These licenses are compatible with our MIT core:
+These licenses are compatible with our MIT license:
 
 - ✅ **MIT** - Fully compatible
 - ✅ **BSD** - Compatible with attribution
@@ -126,86 +131,23 @@ These licenses are compatible with our MIT core:
 
 ### ⚠️ Requires Careful Review
 
-- ⚠️ **GPL v2/v3** - May require legal review for commercial distribution
+- ⚠️ **GPL v2/v3** - File-level compatibility varies
 - ⚠️ **LGPL** - OK for linking, restrictions on modification
 - ⚠️ **MPL** - File-level copyleft requirements
 
-### ❌ Incompatible
-
-- ❌ **AGPL** - Network copyleft incompatible with commercial use
-- ❌ **Proprietary** - Cannot include in open source core
-
-## 📚 Third-Party Dependencies
-
-### Open Source Dependencies
-
-| Component | License | Usage |
-|-----------|---------|-------|
-| **PySide6** | LGPLv3 | Desktop UI framework |
-| **FastAPI** | MIT | REST API server |
-| **React** | MIT | Dashboard frontend |
-| **Scapy** | GPLv2 | Packet capture (separate process) |
-| **SQLAlchemy** | MIT | Database ORM |
-| **pandas** | BSD | Data analysis |
-| **numpy** | BSD | Numerical computing |
-| **scikit-learn** | BSD | Machine learning |
-
-### Commercial Dependencies (Enterprise)
-
-| Component | License | Usage |
-|-----------|---------|-------|
-| **Splunk SDK** | Splunk EULA | SIEM integration |
-| **Advanced ML Models** | Commercial | Enhanced threat detection |
-
-## 🔒 License Enforcement
-
-### Open Source Compliance
-
-For MIT licensed components:
-- ✅ Include license file in distributions
-- ✅ Maintain copyright notices
-- ✅ No additional restrictions
-
-### Commercial License Compliance
-
-For enterprise components:
-- 🔒 Valid license required for use
-- 🔒 Audit rights reserved
-- 🔒 Violation results in license termination
-- 🔒 Legal action for unauthorized use
-
-### 🚨 License Violations
-
-Report license violations to: legal@cybersnoop.com
-
-## 🤝 Contributing and License
-
-### Contributor License Agreement (CLA)
-
-Contributors retain copyright but grant us:
-- ✅ Right to use contributions in open source version
-- ✅ Right to use contributions in commercial version
-- ✅ Right to sublicense under different terms
-
-### 📝 CLA Process
-
-1. **First Contribution** - Sign CLA electronically
-2. **Ongoing Contributions** - CLA covers future contributions
-3. **Corporate Contributors** - Company CLA required
-
 ## 📋 Frequently Asked Questions
 
-### ❓ Can I use CyberSnoop Core commercially?
+### ❓ Can I use CyberSnoop commercially?
 
-**Yes!** The MIT license allows unlimited commercial use of the core application.
+**Yes!** The MIT license allows unlimited commercial use of all CyberSnoop features.
 
-### ❓ Can I build a commercial product on CyberSnoop?
+### ❓ Can I build a commercial product using CyberSnoop?
 
-**Yes!** You can build and sell products using the MIT licensed core. Enterprise features require a commercial license.
+**Yes!** You can build and sell products using CyberSnoop without any restrictions or fees.
 
 ### ❓ Can I integrate CyberSnoop into my existing product?
 
-**Yes!** The MIT core can be integrated. Contact us for enterprise feature licensing.
+**Yes!** CyberSnoop can be integrated into any product without licensing fees.
 
 ### ❓ Do I need to open source my modifications?
 
@@ -213,42 +155,58 @@ Contributors retain copyright but grant us:
 
 ### ❓ Can I remove the CyberSnoop branding?
 
-**Yes!** For the MIT core. Enterprise features may have branding requirements - check your license agreement.
+**Yes!** You can modify or remove any branding as needed.
 
-### ❓ What happens if I violate the commercial license?
+### ❓ Are there any usage restrictions?
 
-License termination, legal action, and damages may apply. Contact legal@cybersnoop.com to resolve violations.
+**No!** There are no user limits, deployment restrictions, or feature limitations.
 
-### ❓ Can I get a custom license agreement?
+## 🤝 Contributing
 
-**Yes!** We offer custom licensing for special situations. Contact sales@cybersnoop.com.
+### Contributing to CyberSnoop
 
-## 📞 License Support
+All contributions are welcome! By contributing to CyberSnoop, you agree to license your contributions under the same MIT license.
 
-### Questions About Licensing?
+### 📝 Contribution Process
 
-- **Legal**: legal@cybersnoop.com
-- **Sales**: sales@cybersnoop.com  
-- **General**: licensing@cybersnoop.com
-- **Phone**: +1-555-CYBER-LAW
+1. **Fork the repository** on GitHub
+2. **Create a feature branch** for your changes
+3. **Submit a pull request** with your improvements
+4. **Community review** - Get feedback from other contributors
+5. **Merge** - Approved changes are merged by maintainers
+
+No contributor license agreement (CLA) is required - the standard MIT license covers all contributions.
+
+## 📞 Community Support
+
+### Get Help and Connect
+
+- **GitHub Issues** - Report bugs and request features
+- **GitHub Discussions** - Community forums and Q&A
+- **Documentation** - Comprehensive guides at the project wiki
+- **Community** - Connect with other users and developers
 
 ### 📚 Additional Resources
 
 - [Open Source Initiative](https://opensource.org/licenses/MIT) - MIT License details
 - [Choose a License](https://choosealicense.com/licenses/mit/) - MIT License guide
-- [Commercial Licensing FAQ](https://cybersnoop.com/licensing-faq) - Detailed FAQ
+- [GitHub Repository](https://github.com/CyberSnoop/CyberSnoop) - Source code and issues
 
 ---
 
 ## 📜 License Summary
 
-| Component | License | Commercial Use | Redistribution | Modification |
-|-----------|---------|----------------|----------------|--------------|
-| **Core Application** | MIT | ✅ Allowed | ✅ Allowed | ✅ Allowed |
-| **Enterprise Features** | Commercial | 🔒 License Required | 🔒 Restricted | 🔒 Restricted |
+| Aspect | Details |
+|--------|---------|
+| **License** | MIT - Complete freedom to use, modify, and distribute |
+| **Commercial Use** | ✅ Allowed without restrictions or fees |
+| **Redistribution** | ✅ Allowed with license notice |
+| **Modification** | ✅ Allowed - keep changes private or contribute back |
+| **Features** | ✅ All features available to everyone |
+| **Support** | Community-based, free for everyone |
 
 ---
 
-**💡 Remember**: When in doubt about licensing, contact our legal team. We're here to help you use CyberSnoop successfully while respecting intellectual property rights.
+**💡 Remember**: CyberSnoop is completely free and open source. There are no paid features, tiers, or restrictions. Use it however you need!
 
-*Last updated: June 30, 2025*
+*Last updated: January 2025*

@@ -16,7 +16,7 @@ from PySide6.QtWidgets import (
     QTextEdit, QTabWidget, QGroupBox, QGridLayout, QLabel,
     QPushButton, QProgressBar, QFrame, QScrollArea
 )
-from PySide6.QtCore import QTimer, QThread, pyqtSignal, QUrl, QSize
+from PySide6.QtCore import QTimer, QThread, Signal, QUrl, QSize
 from PySide6.QtGui import QIcon, QAction, QFont, QPixmap
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWebEngineCore import QWebEngineSettings
@@ -30,18 +30,19 @@ from backend.threat_detector import ThreatDetector
 from backend.api_server import CyberSnoopAPI
 from backend.advanced_threat_detector import AdvancedThreatDetector
 
-# Enterprise compatibility imports
+# All features are now included and free - no enterprise restrictions
+# Import all advanced features directly
 try:
     from enterprise_compatibility import EnterpriseEnhancedCyberSnoop
-    ENTERPRISE_AVAILABLE = True
+    ENTERPRISE_FEATURES_AVAILABLE = True
 except ImportError:
-    ENTERPRISE_AVAILABLE = False
-    print("Enterprise features not available - running in standard mode")
+    ENTERPRISE_FEATURES_AVAILABLE = False
+    print("Advanced features module not found - using built-in capabilities")
 
 class DashboardServer(QThread):
     """Thread to run the Next.js dashboard server"""
-    server_ready = pyqtSignal()
-    server_error = pyqtSignal(str)
+    server_ready = Signal()
+    server_error = Signal(str)
     
     def __init__(self, dashboard_path):
         super().__init__()
@@ -104,8 +105,8 @@ class DashboardServer(QThread):
 
 class APIServerThread(QThread):
     """Thread to run the API server"""
-    server_ready = pyqtSignal()
-    server_error = pyqtSignal(str)
+    server_ready = Signal()
+    server_error = Signal(str)
     
     def __init__(self, config_manager, database_manager, network_monitor):
         super().__init__()
@@ -133,9 +134,9 @@ class APIServerThread(QThread):
 
 class NetworkMonitorThread(QThread):
     """Thread for network monitoring"""
-    packet_captured = pyqtSignal(dict)
-    threat_detected = pyqtSignal(dict)
-    stats_updated = pyqtSignal(dict)
+    packet_captured = Signal(dict)
+    threat_detected = Signal(dict)
+    stats_updated = Signal(dict)
     
     def __init__(self, network_monitor, threat_detector):
         super().__init__()
@@ -186,7 +187,7 @@ class EnhancedCyberSnoopApp(QMainWindow):
         
         # Initialize enterprise components if available
         self.enterprise = None
-        if ENTERPRISE_AVAILABLE:
+        if ENTERPRISE_FEATURES_AVAILABLE:
             try:
                 self.enterprise = EnterpriseEnhancedCyberSnoop(
                     self.config_manager, 

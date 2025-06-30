@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - CyberSnoop{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Welcome Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="card-title mb-1">Welcome back, {{ customer.first_name or customer.company_name }}!</h2>
+                            <p class="card-text mb-0">
+                                <span class="badge status-{{ customer.license_status }} me-2">{{ customer.license_status.title() }}</span>
+                                {{ customer.license_type.title() }} Plan
+                                {% if customer.trial_ends_at and customer.license_status == 'trial' %}
+                                    - Trial ends {{ customer.trial_ends_at.strftime('%B %d, %Y') }}
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <h4 class="mb-0">{{ customer.current_users }}/{{ customer.max_users }}</h4>
+                            <small>Active Users</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- License Information -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-key me-2"></i>License Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>License Key:</strong><br>
+                            <code class="bg-light p-2 rounded d-block">{{ customer.license_key }}</code>
+                            <button class="btn btn-sm btn-outline-primary mt-2" onclick="copyLicenseKey()">
+                                <i class="fas fa-copy me-1"></i>Copy
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Plan Features:</strong><br>
+                            {% if customer.license_type == 'starter' %}
+                                <ul class="list-unstyled mt-2">
+                                    <li><i class="fas fa-check feature-icon"></i>Network Monitoring</li>
+                                    <li><i class="fas fa-check feature-icon"></i>Threat Detection</li>
+                                    <li><i class="fas fa-check feature-icon"></i>Basic Reports</li>
+                                    <li><i class="fas fa-check feature-icon"></i>Email Support</li>
+                                </ul>
+                            {% elif customer.license_type == 'professional' %}
+                                <ul class="list-unstyled mt-2">
+                                    <li><i class="fas fa-check feature-icon"></i>All Starter Features</li>
+                                    <li><i class="fas fa-check feature-icon"></i>Advanced Analytics</li>
+                                    <li><i class="fas fa-check feature-icon"></i>API Access</li>
+                                    <li><i class="fas fa-check feature-icon"></i>Priority Support</li>
+                                </ul>
+                            {% else %}
+                                <ul class="list-unstyled mt-2">
+                                    <li><i class="fas fa-check feature-icon"></i>All Professional Features</li>
+                                    <li><i class="fas fa-check feature-icon"></i>SIEM Integration</li>
+                                    <li><i class="fas fa-check feature-icon"></i>Custom Reports</li>
+                                    <li><i class="fas fa-check feature-icon"></i>Dedicated Support</li>
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-download me-2"></i>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('downloads') }}" class="btn btn-primary">
+                            <i class="fas fa-download me-2"></i>Download Software
+                        </a>
+                        <a href="{{ url_for('support') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-life-ring me-2"></i>Get Support
+                        </a>
+                        <a href="{{ url_for('billing') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-credit-card me-2"></i>Manage Billing
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Usage Statistics -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Usage Statistics (Last 30 Days)</h5>
+                </div>
+                <div class="card-body">
+                    {% if usage_stats %}
+                        <div class="row">
+                            <div class="col-md-8">
+                                <canvas id="usageChart" width="400" height="200"></canvas>
+                            </div>
+                            <div class="col-md-4">
+                                <h6>Feature Usage</h6>
+                                <ul class="list-unstyled">
+                                    {% for feature, count in usage_stats %}
+                                        <li class="d-flex justify-content-between mb-2">
+                                            <span>{{ feature.replace('_', ' ').title() }}</span>
+                                            <span class="badge bg-primary">{{ count }}</span>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-chart-bar fa-3x text-muted mb-3"></i>
+                            <h6 class="text-muted">No usage data available</h6>
+                            <p class="text-muted">Start using CyberSnoop to see your usage statistics here.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Support Tickets -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-ticket-alt me-2"></i>Recent Support Tickets</h5>
+                    <a href="{{ url_for('support') }}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if recent_tickets %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Ticket ID</th>
+                                        <th>Subject</th>
+                                        <th>Priority</th>
+                                        <th>Status</th>
+                                        <th>Created</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for ticket in recent_tickets %}
+                                        <tr>
+                                            <td><code>{{ ticket.ticket_id }}</code></td>
+                                            <td>{{ ticket.subject }}</td>
+                                            <td>
+                                                <span class="badge bg-{{ 'danger' if ticket.priority == 'critical' else 'warning' if ticket.priority == 'high' else 'info' }}">
+                                                    {{ ticket.priority.title() }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-{{ 'success' if ticket.status == 'resolved' else 'primary' if ticket.status == 'in_progress' else 'secondary' }}">
+                                                    {{ ticket.status.replace('_', ' ').title() }}
+                                                </span>
+                                            </td>
+                                            <td>{{ ticket.created_at.strftime('%m/%d/%Y') }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-ticket-alt fa-3x text-muted mb-3"></i>
+                            <h6 class="text-muted">No support tickets</h6>
+                            <p class="text-muted">Need help? Create a support ticket and we'll get back to you quickly.</p>
+                            <a href="{{ url_for('support') }}" class="btn btn-primary">Create Ticket</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Copy license key to clipboard
+    function copyLicenseKey() {
+        const licenseKey = '{{ customer.license_key }}';
+        navigator.clipboard.writeText(licenseKey).then(() => {
+            showToast('License key copied to clipboard!', 'success');
+        }).catch(() => {
+            showToast('Failed to copy license key', 'error');
+        });
+    }
+
+    // Usage statistics chart
+    {% if usage_stats %}
+    const ctx = document.getElementById('usageChart').getContext('2d');
+    const usageChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: [{% for feature, count in usage_stats %}'{{ feature.replace("_", " ").title() }}'{% if not loop.last %},{% endif %}{% endfor %}],
+            datasets: [{
+                data: [{% for feature, count in usage_stats %}{{ count }}{% if not loop.last %},{% endif %}{% endfor %}],
+                backgroundColor: [
+                    '#4299e1',
+                    '#38a169',
+                    '#ed8936',
+                    '#e53e3e',
+                    '#9f7aea',
+                    '#38b2ac'
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+    {% endif %}
+</script>
+{% endblock %}
