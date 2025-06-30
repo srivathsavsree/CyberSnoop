@@ -1,5 +1,5 @@
-import CyberSnoopDashboard from "../dashboard"
+import CyberSnoopDashboard from '@/components/CyberSnoopDashboard';
 
-export default function Page() {
-  return <CyberSnoopDashboard />
+export default function Home() {
+  return <CyberSnoopDashboard />;
 }
