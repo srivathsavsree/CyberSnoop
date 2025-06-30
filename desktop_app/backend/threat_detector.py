@@ -23,6 +23,7 @@ try:
         ThreatType as AdvancedThreatType
     )
     ADVANCED_DETECTOR_AVAILABLE = True
+    logging.info("Advanced threat detector available (relative import)")
 except ImportError:
     try:
         from advanced_threat_detector import (
@@ -32,13 +33,10 @@ except ImportError:
             ThreatType as AdvancedThreatType
         )
         ADVANCED_DETECTOR_AVAILABLE = True
-    except ImportError:
-        logging.warning("Advanced threat detector not available: import failed")
+        logging.info("Advanced threat detector available (direct import)")
+    except ImportError as e:
+        logging.warning(f"Advanced threat detector not available: {e}")
         ADVANCED_DETECTOR_AVAILABLE = False
-    logging.info("Advanced threat detector available")
-except ImportError as e:
-    ADVANCED_DETECTOR_AVAILABLE = False
-    logging.warning(f"Advanced threat detector not available: {e}")
 
 # Legacy compatibility classes
 class ThreatSeverity(Enum):
@@ -117,6 +115,69 @@ class EnhancedThreatDetector:
         # Recent threats (for deduplication)
         self.recent_threats = deque(maxlen=1000)
         self.threat_callbacks = []
+    
+    def detect_threats(self, packets: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Detect threats in a list of packets using both basic and advanced detection
+        
+        Args:
+            packets: List of packet dictionaries
+            
+        Returns:
+            List of detected threats in consistent format
+        """
+        all_threats = []
+        
+        try:
+            # Process each packet for threats
+            for packet in packets:
+                # Use advanced detector if available
+                if self.use_advanced and self.advanced_detector:
+                    try:
+                        # Analyze with advanced detector
+                        advanced_result = self.analyze_packet(packet)
+                        if advanced_result:
+                            if isinstance(advanced_result, list):
+                                all_threats.extend(advanced_result)
+                            else:
+                                all_threats.append(advanced_result)
+                    except Exception as e:
+                        logging.error(f"Advanced detection error: {e}")
+                        # Fall back to basic detection
+                        basic_result = self._analyze_packet_basic(packet)
+                        if basic_result:
+                            all_threats.append(basic_result)
+                else:
+                    # Use basic detection only
+                    basic_result = self._analyze_packet_basic(packet)
+                    if basic_result:
+                        all_threats.append(basic_result)
+                        
+            # Convert threats to consistent dictionary format
+            formatted_threats = []
+            for threat in all_threats:
+                if hasattr(threat, '__dict__'):
+                    # Convert ThreatEvent objects to dictionaries
+                    threat_dict = {
+                        'type': threat.threat_type.value if hasattr(threat.threat_type, 'value') else str(threat.threat_type),
+                        'severity': threat.severity.value if hasattr(threat.severity, 'value') else str(threat.severity),
+                        'source_ip': getattr(threat, 'source_ip', ''),
+                        'destination_ip': getattr(threat, 'destination_ip', ''),
+                        'timestamp': getattr(threat, 'timestamp', datetime.now()),
+                        'description': getattr(threat, 'description', ''),
+                        'confidence': getattr(threat, 'confidence', 0.0),
+                        'details': getattr(threat, 'additional_data', {})
+                    }
+                    formatted_threats.append(threat_dict)
+                elif isinstance(threat, dict):
+                    # Already in dictionary format
+                    formatted_threats.append(threat)
+                    
+            return formatted_threats
+            
+        except Exception as e:
+            logging.error(f"Error in detect_threats: {e}")
+            return []
     
     def analyze_packet(self, packet_info: Dict[str, Any]) -> List[Any]:
         """Analyze a packet for threats using both basic and advanced detection"""
@@ -492,6 +553,57 @@ class EnhancedThreatDetector:
         except Exception as e:
             logging.error(f"Error closing threat detector: {e}")
 
+    def detect_threats(self, packets: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Detect threats in a list of packets
+        
+        Args:
+            packets: List of packet dictionaries
+            
+        Returns:
+            List of detected threats
+        """
+        all_threats = []
+        
+        try:
+            # Process each packet
+            for packet in packets:
+                # Use advanced detector if available
+                if self.use_advanced and self.advanced_detector:
+                    # Advanced detector returns results for each packet individually
+                    threat = self.analyze_packet(packet)
+                    if threat:
+                        all_threats.extend(threat if isinstance(threat, list) else [threat])
+                else:
+                    # Use basic detection
+                    threat = self._analyze_packet_basic(packet)
+                    if threat:
+                        all_threats.append(threat)
+                        
+            # Convert threats to consistent format
+            formatted_threats = []
+            for threat in all_threats:
+                if hasattr(threat, '__dict__'):
+                    # Convert ThreatEvent objects to dictionaries
+                    formatted_threats.append({
+                        'type': threat.threat_type.value if hasattr(threat.threat_type, 'value') else str(threat.threat_type),
+                        'severity': threat.severity.value if hasattr(threat.severity, 'value') else str(threat.severity),
+                        'source_ip': getattr(threat, 'source_ip', ''),
+                        'destination_ip': getattr(threat, 'destination_ip', ''),
+                        'timestamp': getattr(threat, 'timestamp', datetime.now()),
+                        'description': getattr(threat, 'description', ''),
+                        'confidence': getattr(threat, 'confidence', 0.0),
+                        'details': getattr(threat, 'additional_data', {})
+                    })
+                elif isinstance(threat, dict):
+                    formatted_threats.append(threat)
+                    
+            return formatted_threats
+            
+        except Exception as e:
+            logging.error(f"Error in detect_threats: {e}")
+            return []
+
 # Compatibility alias
 ThreatDetector = EnhancedThreatDetector
 
@@ -617,280 +729,3 @@ class TrafficAnalyzer:
                         })
         
         return anomalies
-
-class AdvancedThreatDetector:
-    """Advanced threat detection engine with multiple algorithms"""
-    
-    def __init__(self, config_manager):
-        self.config = config_manager
-        self.connection_tracker = ConnectionTracker()
-        self.traffic_analyzer = TrafficAnalyzer()
-        self.failed_logins = defaultdict(list)
-        self.suspicious_ips = set()
-        self.known_malware_ports = {1337, 31337, 12345, 54321, 9999}
-        self.detected_threats = []
-        self.threat_callbacks = []
-        
-        # Load configuration
-        self.port_scan_threshold = self.config.get("threat_detection.port_scan_threshold", 10)
-        self.brute_force_threshold = self.config.get("threat_detection.brute_force_threshold", 5)
-        self.ddos_threshold = self.config.get("threat_detection.ddos_threshold", 1000)
-        
-        logging.info("Advanced threat detector initialized")
-    
-    def add_threat_callback(self, callback):
-        """Add callback for threat notifications"""
-        self.threat_callbacks.append(callback)
-    
-    def analyze_packet(self, packet_info: Dict[str, Any]) -> Optional[ThreatEvent]:
-        """Analyze a packet for potential threats"""
-        try:
-            src_ip = packet_info.get('src_ip', '')
-            dst_ip = packet_info.get('dst_ip', '')
-            dst_port = packet_info.get('dst_port', 0)
-            protocol = packet_info.get('protocol', '')
-            
-            # Skip internal traffic analysis
-            if self._is_internal_traffic(src_ip, dst_ip):
-                return None
-            
-            # Add to traffic analyzer
-            self.traffic_analyzer.add_packet(packet_info)
-            
-            # Track connections
-            if dst_port:
-                self.connection_tracker.add_connection(src_ip, dst_ip, dst_port)
-            
-            # Check for various threats
-            threat = None
-            
-            # Port scan detection
-            threat = threat or self._detect_port_scan(src_ip)
-            
-            # Suspicious ports
-            threat = threat or self._detect_suspicious_ports(src_ip, dst_ip, dst_port)
-            
-            # Brute force detection
-            threat = threat or self._detect_brute_force(src_ip, dst_ip, dst_port)
-            
-            # DDoS detection
-            threat = threat or self._detect_ddos(dst_ip)
-            
-            # Malware communication
-            threat = threat or self._detect_malware_communication(src_ip, dst_ip, dst_port)
-            
-            if threat:
-                self._handle_threat(threat)
-            
-            return threat
-            
-        except Exception as e:
-            logging.error(f"Error analyzing packet for threats: {e}")
-            return None
-    
-    def _is_internal_traffic(self, src_ip: str, dst_ip: str) -> bool:
-        """Check if traffic is internal/local"""
-        internal_ranges = [
-            '127.', '10.', '192.168.', '172.16.', '172.17.', '172.18.',
-            '172.19.', '172.20.', '172.21.', '172.22.', '172.23.',
-            '172.24.', '172.25.', '172.26.', '172.27.', '172.28.',
-            '172.29.', '172.30.', '172.31.'
-        ]
-        
-        return any(src_ip.startswith(r) and dst_ip.startswith(r) for r in internal_ranges)
-    
-    def _detect_port_scan(self, src_ip: str) -> Optional[ThreatEvent]:
-        """Detect port scanning attempts"""
-        targets, ports, rate = self.connection_tracker.get_port_scan_score(src_ip)
-        
-        if ports > self.port_scan_threshold or rate > 50:  # 50 connections/minute
-            severity = ThreatSeverity.HIGH if ports > 50 else ThreatSeverity.MEDIUM
-            confidence = min(1.0, (ports / 100.0) + (rate / 100.0))
-            
-            return ThreatEvent(
-                threat_type=ThreatType.PORT_SCAN,
-                severity=severity,
-                source_ip=src_ip,
-                destination_ip="multiple",
-                timestamp=datetime.now(),
-                description=f"Port scan detected: {ports} ports, {targets} targets, {rate:.1f} conn/min",
-                confidence=confidence,
-                additional_data={
-                    'ports_scanned': ports,
-                    'targets': targets,
-                    'scan_rate': rate
-                }
-            )
-        
-        return None
-    
-    def _detect_suspicious_ports(self, src_ip: str, dst_ip: str, dst_port: int) -> Optional[ThreatEvent]:
-        """Detect connections to suspicious ports"""
-        if dst_port in self.known_malware_ports:
-            return ThreatEvent(
-                threat_type=ThreatType.MALWARE_COMMUNICATION,
-                severity=ThreatSeverity.HIGH,
-                source_ip=src_ip,
-                destination_ip=dst_ip,
-                timestamp=datetime.now(),
-                description=f"Connection to known malware port {dst_port}",
-                confidence=0.8,
-                additional_data={'port': dst_port}
-            )
-        
-        return None
-    
-    def _detect_brute_force(self, src_ip: str, dst_ip: str, dst_port: int) -> Optional[ThreatEvent]:
-        """Detect brute force attacks"""
-        # Common brute force ports
-        brute_force_ports = {22, 23, 21, 25, 110, 143, 993, 995, 3389, 5900}
-        
-        if dst_port in brute_force_ports:
-            # Track failed attempts (simplified - in real implementation, 
-            # this would analyze actual authentication failures)
-            now = datetime.now()
-            self.failed_logins[src_ip].append(now)
-            
-            # Clean old attempts
-            cutoff = now - timedelta(minutes=10)
-            self.failed_logins[src_ip] = [
-                t for t in self.failed_logins[src_ip] if t > cutoff
-            ]
-            
-            if len(self.failed_logins[src_ip]) > self.brute_force_threshold:
-                return ThreatEvent(
-                    threat_type=ThreatType.BRUTE_FORCE,
-                    severity=ThreatSeverity.HIGH,
-                    source_ip=src_ip,
-                    destination_ip=dst_ip,
-                    timestamp=now,
-                    description=f"Brute force attack detected on port {dst_port}",
-                    confidence=0.9,
-                    additional_data={
-                        'port': dst_port,
-                        'attempts': len(self.failed_logins[src_ip])
-                    }
-                )
-        
-        return None
-    
-    def _detect_ddos(self, dst_ip: str) -> Optional[ThreatEvent]:
-        """Detect DDoS attacks"""
-        # This is a simplified DDoS detection
-        # In practice, this would analyze traffic patterns more thoroughly
-        if len(self.traffic_analyzer.packet_rates) > 0:
-            current_rate = self.traffic_analyzer.packet_rates[-1]
-            if current_rate > self.ddos_threshold:
-                return ThreatEvent(
-                    threat_type=ThreatType.DDoS_ATTACK,
-                    severity=ThreatSeverity.CRITICAL,
-                    source_ip="multiple",
-                    destination_ip=dst_ip,
-                    timestamp=datetime.now(),
-                    description=f"DDoS attack detected: {current_rate} packets/sec",
-                    confidence=0.7,
-                    additional_data={'packet_rate': current_rate}
-                )
-        
-        return None
-    
-    def _detect_malware_communication(self, src_ip: str, dst_ip: str, dst_port: int) -> Optional[ThreatEvent]:
-        """Detect potential malware communication patterns"""
-        # Check for communication with known bad IPs (simplified)
-        suspicious_patterns = [
-            dst_port in range(6660, 6670),  # IRC bot networks
-            dst_port == 6667,  # IRC
-            dst_port in {4444, 5555, 7777, 8888, 9999}  # Common backdoor ports
-        ]
-        
-        if any(suspicious_patterns):
-            return ThreatEvent(
-                threat_type=ThreatType.MALWARE_COMMUNICATION,
-                severity=ThreatSeverity.MEDIUM,
-                source_ip=src_ip,
-                destination_ip=dst_ip,
-                timestamp=datetime.now(),
-                description=f"Suspicious communication pattern detected on port {dst_port}",
-                confidence=0.6,
-                additional_data={'port': dst_port}
-            )
-        
-        return None
-    
-    def _handle_threat(self, threat: ThreatEvent):
-        """Handle detected threat"""
-        self.detected_threats.append(threat)
-        
-        # Log the threat
-        logging.warning(f"THREAT DETECTED: {threat.threat_type.value} - {threat.description}")
-        
-        # Notify callbacks
-        for callback in self.threat_callbacks:
-            try:
-                callback(threat)
-            except Exception as e:
-                logging.error(f"Error in threat callback: {e}")
-    
-    def get_threat_summary(self) -> Dict[str, Any]:
-        """Get summary of detected threats"""
-        if not self.detected_threats:
-            return {"total": 0, "by_type": {}, "by_severity": {}}
-        
-        by_type = defaultdict(int)
-        by_severity = defaultdict(int)
-        
-        for threat in self.detected_threats:
-            by_type[threat.threat_type.value] += 1
-            by_severity[threat.severity.value] += 1
-        
-        return {
-            "total": len(self.detected_threats),
-            "by_type": dict(by_type),
-            "by_severity": dict(by_severity),
-            "latest": self.detected_threats[-10:]  # Latest 10 threats
-        }
-    
-    def clear_old_threats(self, hours: int = 24):
-        """Clear threats older than specified hours"""
-        cutoff = datetime.now() - timedelta(hours=hours)
-        self.detected_threats = [
-            t for t in self.detected_threats if t.timestamp > cutoff
-        ]
-
-if __name__ == "__main__":
-    # Test the threat detection system
-    print("Testing Advanced Threat Detection System")
-    print("=" * 50)
-    
-    # Mock config manager
-    class MockConfig:
-        def get(self, key, default):
-            return default
-    
-    detector = AdvancedThreatDetector(MockConfig())
-    
-    # Test packet
-    test_packet = {
-        'src_ip': '192.168.1.100',
-        'dst_ip': '8.8.8.8',
-        'dst_port': 80,
-        'protocol': 'TCP',
-        'protocol_name': 'HTTP'
-    }
-    
-    threat = detector.analyze_packet(test_packet)
-    print(f"Test packet analysis: {threat}")
-    
-    # Test port scan
-    for port in range(20, 30):
-        scan_packet = {
-            'src_ip': '192.168.1.200',
-            'dst_ip': '192.168.1.1',
-            'dst_port': port,
-            'protocol': 'TCP',
-            'protocol_name': 'TCP'
-        }
-        detector.analyze_packet(scan_packet)
-    
-    summary = detector.get_threat_summary()
-    print(f"Threat summary: {summary}")
