@@ -13,7 +13,7 @@ from fastapi.responses import HTMLResponse
 import uvicorn
 import json
 from pathlib import Path
-from .database_manager import DatabaseManager
+from .enhanced_database_manager import EnhancedDatabaseManager as DatabaseManager
 from .network_monitor import NetworkMonitor
 
 class CyberSnoopAPI:

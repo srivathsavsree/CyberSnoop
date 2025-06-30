@@ -28,7 +28,7 @@ from PySide6.QtWebEngineWidgets import QWebEngineView
 # Application imports
 from backend.api_server import CyberSnoopAPI
 from backend.network_monitor import NetworkMonitor
-from backend.database_manager import DatabaseManager
+from backend.enhanced_database_manager import EnhancedDatabaseManager as DatabaseManager
 from backend.logging_system import initialize_logging, get_logger
 from config.config_manager import ConfigManager
 from config.settings_dialog import SettingsDialog
