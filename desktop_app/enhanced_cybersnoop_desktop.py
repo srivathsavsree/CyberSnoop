@@ -16,7 +16,7 @@ from PySide6.QtWidgets import (
     QTextEdit, QTabWidget, QGroupBox, QGridLayout, QLabel,
     QPushButton, QProgressBar, QFrame, QScrollArea
 )
-from PySide6.QtCore import QTimer, QThread, Signal, QUrl, QSize
+from PySide6.QtCore import QTimer, QThread, Signal, QUrl, QSize, Qt
 from PySide6.QtGui import QIcon, QAction, QFont, QPixmap
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWebEngineCore import QWebEngineSettings
@@ -127,7 +127,7 @@ class APIServerThread(QThread):
             self.server_ready.emit()
             
             # Start the server (this blocks)
-            self.api_server.start_server(host="127.0.0.1", port=8888)
+            self.api_server.start_server(host="127.0.0.1", port=8889)
             
         except Exception as e:
             self.server_error.emit(f"API server error: {str(e)}")
@@ -205,7 +205,7 @@ class EnhancedCyberSnoopApp(QMainWindow):
         
         # Dashboard integration
         self.dashboard_url = "http://localhost:3000"
-        self.api_url = "http://127.0.0.1:8888"
+        self.api_url = "http://127.0.0.1:8889"
         
         # UI components
         self.web_view = None
@@ -228,7 +228,8 @@ class EnhancedCyberSnoopApp(QMainWindow):
     def setup_ui(self):
         """Setup the main user interface"""
         self.setWindowTitle("CyberSnoop - Network Security Monitor")
-        self.setGeometry(100, 100, 1400, 900)
+        self.setGeometry(100, 100, 1600, 1000)  # Increased size for better visibility
+        self.setMinimumSize(1200, 800)  # Set minimum size to prevent UI issues
         
         # Set application icon
         # self.setWindowIcon(QIcon("assets/cybersnoop-icon.png"))
@@ -265,12 +266,28 @@ class EnhancedCyberSnoopApp(QMainWindow):
         self.create_status_bar()
         
     def create_left_panel(self):
-        """Create the left control panel"""
-        panel = QWidget()
-        panel.setMaximumWidth(300)
-        panel.setMinimumWidth(250)
+        """Create the left control panel with scroll area"""
+        # Main panel container
+        main_panel = QWidget()
+        main_panel.setMaximumWidth(320)
+        main_panel.setMinimumWidth(280)
         
+        # Create scroll area for better visibility
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        
+        # Content widget for scroll area
+        panel = QWidget()
         layout = QVBoxLayout(panel)
+        layout.setSpacing(10)  # Add spacing between groups
+        
+        # Add scroll area to main panel
+        main_layout = QVBoxLayout(main_panel)
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.addWidget(scroll_area)
+        scroll_area.setWidget(panel)
         
         # System Status Group
         status_group = QGroupBox("System Status")
@@ -346,7 +363,7 @@ class EnhancedCyberSnoopApp(QMainWindow):
         server_layout.addWidget(QLabel("API Server:"), 0, 0)
         server_layout.addWidget(self.api_status, 0, 1)
         
-        self.dashboard_status = QLabel("🔴 Stopped")
+        self.dashboard_status = QLabel("� Running")
         server_layout.addWidget(QLabel("Dashboard:"), 1, 0)
         server_layout.addWidget(self.dashboard_status, 1, 1)
         
@@ -357,21 +374,21 @@ class EnhancedCyberSnoopApp(QMainWindow):
             enterprise_group = QGroupBox("Enterprise Features")
             enterprise_layout = QGridLayout(enterprise_group)
             
-            # SIEM Integration Status
-            siem_enabled = self.enterprise.enterprise_features.get('siem_integration', False)
-            self.siem_status = QLabel("🟢 Enabled" if siem_enabled else "🔴 Disabled")
+            # SIEM Integration Status (Always enabled - free version)
+            siem_enabled = True  # Force enable for free version
+            self.siem_status = QLabel("🟢 Enabled")
             enterprise_layout.addWidget(QLabel("SIEM:"), 0, 0)
             enterprise_layout.addWidget(self.siem_status, 0, 1)
             
-            # AI Detection Status
-            ai_enabled = self.enterprise.enterprise_features.get('ai_detection', False)
-            self.ai_status = QLabel("🟢 Enabled" if ai_enabled else "🔴 Disabled")
+            # AI Detection Status (Always enabled - free version)
+            ai_enabled = True  # Force enable for free version
+            self.ai_status = QLabel("🟢 Enabled")
             enterprise_layout.addWidget(QLabel("AI Detection:"), 1, 0)
             enterprise_layout.addWidget(self.ai_status, 1, 1)
             
-            # Compliance Reporting Status
-            compliance_enabled = self.enterprise.enterprise_features.get('compliance_reporting', False)
-            self.compliance_status = QLabel("🟢 Enabled" if compliance_enabled else "🔴 Disabled")
+            # Compliance Reporting Status (Always enabled - free version)
+            compliance_enabled = True  # Force enable for free version
+            self.compliance_status = QLabel("🟢 Enabled")
             enterprise_layout.addWidget(QLabel("Compliance:"), 2, 0)
             enterprise_layout.addWidget(self.compliance_status, 2, 1)
             
@@ -389,7 +406,7 @@ class EnhancedCyberSnoopApp(QMainWindow):
         # Add stretch to push everything to top
         layout.addStretch()
         
-        return panel
+        return main_panel
         
     def create_dashboard_panel(self):
         """Create the dashboard web view panel"""
