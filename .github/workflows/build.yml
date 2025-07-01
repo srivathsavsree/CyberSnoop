@@ -7,45 +7,6 @@ on:
   workflow_dispatch:  # Allow manual trigger
 
 jobs:
-  build-windows:
-    runs-on: windows-latest
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-        
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pyinstaller
-        
-    - name: Build executable
-      run: |
-        cd desktop_app
-        pyinstaller --onefile --windowed --name CyberSnoop enhanced_cybersnoop_desktop.py
-        
-    - name: Create installer (basic)
-      run: |
-        # For now, just rename the exe as a simple "installer"
-        copy desktop_app\dist\CyberSnoop.exe CyberSnoop-Setup.exe
-        
-    - name: Upload release asset
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./CyberSnoop-Setup.exe
-        asset_name: CyberSnoop-Setup.exe
-        asset_content_type: application/octet-stream
-        
   create-release:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
@@ -59,30 +20,79 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: CyberSnoop ${{ github.ref }}
+        tag_name: ${{ github.ref_name }}
+        release_name: CyberSnoop ${{ github.ref_name }}
         body: |
-          🛡️ CyberSnoop - Free Network Security Monitor
+          🛡️ **CyberSnoop ${{ github.ref_name }} - Production Release**
           
-          ## What's New
-          - All features included and free
-          - No restrictions or limitations
-          - Complete network security monitoring
-          
-          ## 📥 Download
-          - Download `CyberSnoop-Setup.exe` below
-          - Run the installer
-          - Launch from desktop shortcut
-          
-          ## 🆓 All Features Free
-          ✅ Real-time Network Monitoring
-          ✅ AI-Powered Threat Detection  
-          ✅ SIEM Integration
-          ✅ Cloud Monitoring
-          ✅ Compliance Reporting
-          ✅ Professional Dashboard
-          
-          ## 🐛 Issues
-          Report bugs at: https://github.com/${{ github.repository }}/issues
+          ## 📥 **Easy Installation**
+          Download `CyberSnoop-Setup.exe` and run it. The installer will:
+          - Download and install CyberSnoop automatically
+          - Create desktop shortcut
+          - Add to Start Menu
+          - Install all dependencies
+
+          ## ✨ **Features**
+          - Real-time Network Monitoring (12+ packet categories)
+          - AI-Powered Threat Detection (Machine Learning)
+          - SIEM Integration (Splunk, ELK, QRadar, Microsoft Sentinel)
+          - Cloud Monitoring (AWS, Azure, GCP)
+          - Compliance Reporting (PCI DSS, HIPAA, GDPR, SOX)
+          - Professional React Dashboard
+          - Complete API Access
+
+          ## 🎯 **100% Free & Open Source**
+          All enterprise features included at no cost.
+
+          ## 💻 **System Requirements**
+          - Windows 10/11 (64-bit)
+          - 8GB RAM
+          - Python 3.11+ (automatically managed by installer)
+          - Administrator privileges for network monitoring
+
+          ## 🐛 **Support**
+          Report issues: https://github.com/${{ github.repository }}/issues
         draft: false
         prerelease: false
+
+  build-windows:
+    runs-on: windows-latest
+    needs: create-release
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller
+
+    - name: Use pre-built installer
+      run: |
+        # Copy our pre-built installer
+        if (Test-Path "CyberSnoop-Setup.exe") {
+          Write-Host "✅ Using pre-built CyberSnoop-Setup.exe"
+        } else {
+          Write-Host "❌ CyberSnoop-Setup.exe not found, creating simple installer..."
+          pip install -r requirements.txt
+          cd desktop_app
+          pyinstaller --onefile --windowed --name CyberSnoop enhanced_cybersnoop_desktop.py
+          copy dist\CyberSnoop.exe ..\CyberSnoop-Setup.exe
+        }
+        
+    - name: Upload release asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ./CyberSnoop-Setup.exe
+        asset_name: CyberSnoop-Setup.exe
+        asset_content_type: application/octet-stream
