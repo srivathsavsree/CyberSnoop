@@ -93,29 +93,32 @@ class CyberSnoopInstaller:
             self.status_var.set("Creating installation directory...")
             install_dir.mkdir(exist_ok=True)
             
-            self.status_var.set("Downloading CyberSnoop from GitHub...")
+            self.status_var.set("Installing CyberSnoop files...")
             
-            # Download from GitHub
-            import urllib.request
-            import zipfile
-            import tempfile
+            # Use local files instead of downloading from GitHub
+            current_dir = Path(__file__).parent
             
-            github_url = "https://github.com/srivathsavsree/CyberSnoop/archive/refs/heads/main.zip"
+            # Copy essential files locally
+            files_to_copy = [
+                "desktop_app",
+                "requirements.txt", 
+                "README.md",
+                "LICENSE.md"
+            ]
             
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".zip") as tmp_file:
-                urllib.request.urlretrieve(github_url, tmp_file.name)
+            self.status_var.set("Copying application files...")
+            
+            for item_name in files_to_copy:
+                src_path = current_dir / item_name
+                dst_path = install_dir / item_name
                 
-                self.status_var.set("Extracting files...")
-                
-                with zipfile.ZipFile(tmp_file.name, 'r') as zip_ref:
-                    zip_ref.extractall(install_dir)
-                
-                # Move files from extracted folder to install_dir
-                extracted_folder = install_dir / "CyberSnoop-main"
-                if extracted_folder.exists():
-                    for item in extracted_folder.iterdir():
-                        shutil.move(str(item), str(install_dir / item.name))
-                    extracted_folder.rmdir()
+                if src_path.exists():
+                    if src_path.is_dir():
+                        if dst_path.exists():
+                            shutil.rmtree(dst_path)
+                        shutil.copytree(src_path, dst_path)
+                    else:
+                        shutil.copy2(src_path, dst_path)
             
             self.status_var.set("Installing Python dependencies...")
             

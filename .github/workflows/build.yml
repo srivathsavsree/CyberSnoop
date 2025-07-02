@@ -68,7 +68,8 @@ jobs:
 
           ## 💻 **System Requirements**
           - Windows 10/11 (64-bit)
-          - 8GB RAM
+          - Minimum: Intel i5 (4th gen) or AMD Ryzen 5, 8GB RAM
+          - Recommended: Intel i7 (8th gen+) or AMD Ryzen 7, 16GB RAM
           - Python 3.11+ (automatically managed by installer)
           - Administrator privileges for network monitoring
 

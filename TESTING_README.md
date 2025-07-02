@@ -268,14 +268,14 @@ Threat Detection Performance:
 ### **Hardware Compatibility Testing**
 
 #### **Minimum System Requirements (Verified)**
-- **CPU**: Intel i3-6100 / AMD Ryzen 3 1200
+- **CPU**: Intel i5-4590 / AMD Ryzen 5 1600 (4th generation or equivalent)
 - **RAM**: 8GB DDR4
 - **Storage**: 2GB available space
 - **Network**: Ethernet or Wi-Fi adapter
 - **OS**: Windows 10 1903+ / Windows 11
 
 #### **Recommended System Specifications**
-- **CPU**: Intel i5-8400 / AMD Ryzen 5 2600
+- **CPU**: Intel i7-8700K / AMD Ryzen 7 3700X (8th generation or newer)
 - **RAM**: 16GB DDR4
 - **Storage**: 5GB SSD space
 - **Network**: Gigabit Ethernet

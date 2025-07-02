@@ -11,28 +11,23 @@
 
 ## 📋 System Requirements
 
-### **✅ Your PC is Perfect!**
-**Confirmed Compatible with your setup:**
-- **CPU**: Intel i3 ✅ (exceeds minimum i3-8100 requirement)
-- **RAM**: 8GB DDR4 ✅ (CyberSnoop uses only 200-800MB)
-- **OS**: Windows 11 ✅ (fully supported)
-- **Storage**: 2GB needed ✅ (plenty of space available)
-
 ### **Hardware Requirements**
 
 #### **Minimum Configuration** ⚡
-- **CPU**: Intel Core i3-8100 / AMD Ryzen 3 2200G or equivalent
+- **CPU**: Intel Core i5 (4th generation) / AMD Ryzen 5 1600 or equivalent
 - **RAM**: 8 GB DDR4 (CyberSnoop uses 200-800 MB)
 - **Storage**: 2 GB free disk space (SSD recommended)
 - **Network**: Ethernet/Wi-Fi adapter with administrator privileges
 - **Display**: 1366x768 resolution (1920x1080 recommended)
+- **OS**: Windows 10 (64-bit) or Windows 11
 
 #### **Recommended Configuration** 🚀
-- **CPU**: Intel Core i5-10400 / AMD Ryzen 5 3600 or better
-- **RAM**: 16 GB DDR4 or higher
-- **Storage**: 5 GB free SSD space
-- **Network**: Gigabit Ethernet adapter
-- **Display**: 1920x1080 or higher (dual monitor setup ideal)
+- **CPU**: Intel Core i7 (8th generation or newer) / AMD Ryzen 7 3700X or equivalent
+- **RAM**: 16 GB DDR4+ (for optimal performance with large networks)
+- **Storage**: 5 GB free SSD space (faster dashboard loading)
+- **Network**: Gigabit Ethernet (for high-traffic monitoring)
+- **Display**: 1920x1080 or higher (better dashboard experience)
+- **OS**: Windows 11 (64-bit) - latest updates recommended
 
 #### **High-Performance Configuration** 💪
 - **CPU**: Intel Core i7-11700K / AMD Ryzen 7 5800X or better

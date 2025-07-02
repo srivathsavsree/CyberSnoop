@@ -10,6 +10,26 @@
 
 ---
 
+## 💻 System Requirements
+
+### Minimum Requirements
+- **OS**: Windows 10 (64-bit) or Windows 11
+- **CPU**: Intel Core i5 (4th generation) or AMD Ryzen 5 equivalent
+- **RAM**: 8 GB DDR4
+- **Storage**: 2 GB free disk space
+- **Network**: Ethernet or Wi-Fi adapter with driver support
+- **Python**: 3.11 or higher (automatically installed by installer)
+
+### Recommended for Optimal Performance
+- **OS**: Windows 11 (64-bit)
+- **CPU**: Intel Core i7 (8th generation or newer) or AMD Ryzen 7 equivalent
+- **RAM**: 16 GB DDR4 or higher
+- **Storage**: 5 GB free disk space (SSD recommended)
+- **Network**: Gigabit Ethernet for high-traffic monitoring
+- **GPU**: Dedicated graphics card for enhanced dashboard performance
+
+---
+
 ## 🌟 What is CyberSnoop?
 
 CyberSnoop is a **completely free and open-source Windows desktop application** for real-time network security monitoring and threat detection. Built with modern technologies (PySide6, React, FastAPI), it provides **enterprise-grade network monitoring capabilities** at absolutely no cost to everyone.
