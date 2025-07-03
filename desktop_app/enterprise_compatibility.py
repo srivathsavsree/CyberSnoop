@@ -236,15 +236,18 @@ class CloudSecurityMonitor:
     def __init__(self, config_manager):
         self.config = config_manager
         self.cloud_providers = {
-            'aws': AWSMonitor(config_manager),
+            # 'aws': AWSMonitor(config_manager),  # Disabled - AWS account unavailable
             'azure': AzureMonitor(config_manager),
             'gcp': GCPMonitor(config_manager)
         }
     
-    async def monitor_cloud_traffic(self, provider: str = 'aws'):
-        """Monitor cloud network traffic"""
+    async def monitor_cloud_traffic(self, provider: str = 'azure'):
+        """Monitor cloud network traffic (AWS currently unavailable)"""
         if provider in self.cloud_providers:
             return await self.cloud_providers[provider].get_flow_logs()
+        elif provider == 'aws':
+            print("AWS monitoring temporarily unavailable - account closed")
+            return []
         return []
     
     def analyze_container_network(self, container_id: str) -> Dict:
@@ -253,14 +256,15 @@ class CloudSecurityMonitor:
         return {}
 
 class AWSMonitor:
-    """AWS VPC Flow Logs Monitor"""
+    """AWS VPC Flow Logs Monitor - Currently Disabled"""
     
     def __init__(self, config_manager):
         self.config = config_manager
+        print("⚠️  AWS Monitor: Account unavailable - feature disabled")
     
     async def get_flow_logs(self) -> List[Dict]:
-        """Retrieve AWS VPC Flow Logs"""
-        # Implementation for AWS integration
+        """Retrieve AWS VPC Flow Logs - Currently Unavailable"""
+        print("⚠️  AWS VPC Flow Logs unavailable - account closed")
         return []
 
 class AzureMonitor:

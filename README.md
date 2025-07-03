@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Platform: Windows](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
-[![Version: 1.0](https://img.shields.io/badge/version-1.0-blue.svg)](https://github.com/srivathsavsree/CyberSnoop)
+[![Version: 2.0](https://img.shields.io/badge/version-2.0-blue.svg)](https://github.com/srivathsavsree/CyberSnoop)
 [![Status: Production Ready](https://img.shields.io/badge/status-Production%20Ready-green.svg)](https://github.com/srivathsavsree/CyberSnoop)
 [![Downloads](https://img.shields.io/github/downloads/srivathsavsree/CyberSnoop/total.svg)](https://github.com/srivathsavsree/CyberSnoop/releases)
 
@@ -78,7 +78,7 @@ CyberSnoop is a **completely free and open-source Windows desktop application** 
 - **SIEM Compatibility** - Splunk, Elasticsearch, QRadar, Microsoft Sentinel integration
 - **Compliance Reporting** - Automated PCI DSS, HIPAA, GDPR, SOX compliance reports
 - **API-First Architecture** - RESTful endpoints for custom integrations and automation
-- **Multi-Cloud Monitoring** - AWS, Azure, GCP network analysis and security
+- **Multi-Cloud Monitoring** - Azure, GCP network analysis and security (AWS support planned)
 
 ### 💼 **Professional Features (All Free)**
 - **Advanced Analytics** - Statistical analysis, trend detection, predictive modeling

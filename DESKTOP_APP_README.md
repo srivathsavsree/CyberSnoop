@@ -249,7 +249,7 @@ The application will automatically:
 # Ready for use:
 ✅ SIEM Integration (Splunk, ELK, QRadar, Sentinel)
 ✅ Compliance Reporting (PCI DSS, HIPAA, GDPR)
-✅ Cloud Monitoring (AWS, Azure, GCP)
+✅ Cloud Monitoring (Azure, GCP - AWS support planned)
 ✅ API Integration (RESTful endpoints)
 ✅ Advanced Analytics (ML-powered insights)
 ✅ Custom Dashboards (Drag-and-drop interface)
@@ -310,12 +310,12 @@ elasticsearch:
 
 #### **Cloud Monitoring Setup**
 ```yaml
-# AWS Integration
-aws:
-  enabled: true
-  region: "us-east-1"
-  vpc_flow_logs: true
-  cloudtrail: true
+# AWS Integration (Support Planned - Coming Soon)
+# aws:
+#   enabled: false
+#   region: "us-east-1"
+#   vpc_flow_logs: true
+#   cloudtrail: true
 
 # Azure Integration
 azure:

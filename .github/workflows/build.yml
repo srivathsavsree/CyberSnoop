@@ -58,7 +58,7 @@ jobs:
           - Real-time Network Monitoring (12+ packet categories)
           - AI-Powered Threat Detection (Machine Learning)
           - SIEM Integration (Splunk, ELK, QRadar, Microsoft Sentinel)
-          - Cloud Monitoring (AWS, Azure, GCP)
+          - Cloud Monitoring (Azure, GCP - AWS support planned)
           - Compliance Reporting (PCI DSS, HIPAA, GDPR, SOX)
           - Professional React Dashboard
           - Complete API Access

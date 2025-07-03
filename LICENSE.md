@@ -16,7 +16,7 @@ All CyberSnoop components are licensed under the **MIT License**:
 ✅ AI/ML Threat Detection (machine learning algorithms)
 ✅ SIEM Integrations (Splunk, Elasticsearch, QRadar, Sentinel)
 ✅ Advanced Analytics (behavioral analysis & prediction)
-✅ Cloud Monitoring (AWS, Azure, GCP integrations)
+✅ Cloud Monitoring (Azure, GCP integrations - AWS support planned)
 ✅ Compliance Reporting (PCI DSS, HIPAA, GDPR)
 ✅ Database Storage (SQLite & enterprise backends)
 ✅ React Dashboard (all features included)

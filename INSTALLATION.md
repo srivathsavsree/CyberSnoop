@@ -1,7 +1,7 @@
 # 🚀 CyberSnoop Installation Guide
 
 [![Platform: Windows](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
-[![Version: 1.0](https://img.shields.io/badge/version-1.0-blue.svg)](https://github.com/srivathsavsree/CyberSnoop)
+[![Version: 2.0](https://img.shields.io/badge/version-2.0-blue.svg)](https://github.com/srivathsavsree/CyberSnoop)
 [![Installation: One-Click](https://img.shields.io/badge/installation-One--Click-green.svg)](https://github.com/srivathsavsree/CyberSnoop)
 
 > **💾 Easy one-click installation for CyberSnoop Network Security Monitor**
