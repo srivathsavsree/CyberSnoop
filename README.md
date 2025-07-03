@@ -5,26 +5,41 @@
 [![Platform: Windows](https://img.shields.io/badge/platform-Windows-lightgrey.svg)](https://www.microsoft.com/windows)
 [![Version: 1.0](https://img.shields.io/badge/version-1.0-blue.svg)](https://github.com/srivathsavsree/CyberSnoop)
 [![Status: Production Ready](https://img.shields.io/badge/status-Production%20Ready-green.svg)](https://github.com/srivathsavsree/CyberSnoop)
+[![Downloads](https://img.shields.io/github/downloads/srivathsavsree/CyberSnoop/total.svg)](https://github.com/srivathsavsree/CyberSnoop/releases)
 
 > **🎯 100% Free, Open-Source Network Security Monitoring with AI-Powered Threat Detection**
 
 ---
 
-## 💻 System Requirements
+## � Quick Download & Install
 
-### Minimum Requirements
+### **📥 One-Click Installation (Recommended)**
+**[⬇️ Download CyberSnoop-Setup.exe](https://github.com/srivathsavsree/CyberSnoop/releases/latest/download/CyberSnoop-Setup.exe)**
+
+1. **Download** the installer (15 MB, includes all dependencies)
+2. **Run as Administrator** - Right-click → "Run as administrator"
+3. **Follow installer** - Check "Create Desktop Shortcut" → Click "Install"
+4. **Launch** - Double-click desktop shortcut or find in Start Menu
+
+**Windows Security Note:** If Windows shows a warning, click "More info" → "Run anyway" (this is normal for new applications)
+
+---
+
+## �💻 System Requirements
+
+### **✅ Minimum Requirements**
 - **OS**: Windows 10 (64-bit) or Windows 11
 - **CPU**: Intel Core i5 (4th generation) or AMD Ryzen 5 equivalent
 - **RAM**: 8 GB DDR4
 - **Storage**: 2 GB free disk space
 - **Network**: Ethernet or Wi-Fi adapter with driver support
-- **Python**: 3.11 or higher (automatically installed by installer)
+- **Privileges**: Administrator access for network monitoring
 
-### Recommended for Optimal Performance
-- **OS**: Windows 11 (64-bit)
+### **🚀 Recommended for Optimal Performance**
+- **OS**: Windows 11 (64-bit) with latest updates
 - **CPU**: Intel Core i7 (8th generation or newer) or AMD Ryzen 7 equivalent
 - **RAM**: 16 GB DDR4 or higher
-- **Storage**: 5 GB free disk space (SSD recommended)
+- **Storage**: 5 GB free SSD space
 - **Network**: Gigabit Ethernet for high-traffic monitoring
 - **GPU**: Dedicated graphics card for enhanced dashboard performance
 
@@ -41,7 +56,7 @@ CyberSnoop is a **completely free and open-source Windows desktop application** 
 - **Network Administrators** - System security maintenance and compliance
 - **Enterprises** - SIEM integration and regulatory compliance reporting
 - **Students & Researchers** - Learning network security and threat analysis
-- **Open Source Projects** - Community-driven security monitoring
+- **Home Users** - Personal network security and privacy protection
 
 ---
 
@@ -75,139 +90,115 @@ CyberSnoop is a **completely free and open-source Windows desktop application** 
 
 ---
 
-## 🚀 Quick Start
+## �️ User Interface Overview
 
-### 📥 **Option 1: Easy Installation (Recommended)**
-1. **Download**: Visit our [releases page](https://github.com/srivathsavsree/CyberSnoop/releases)
-2. **Install**: Run `CyberSnoop-Setup.exe` 
-3. **Launch**: Click desktop shortcut or run from Start Menu
-4. **Enjoy**: All features unlocked immediately!
+### **Main Application Layout**
+When you launch CyberSnoop, you'll see a professional split-screen interface:
 
-### 🛠️ **Option 2: Developer Installation**
+**Left Panel (Control Center):**
+- 📊 **System Status** - Real-time monitoring status and uptime
+- 📈 **Live Statistics** - Packets captured, threats detected, active connections
+- 🎮 **Controls** - Start/Stop monitoring, Settings, Export data
+- 🔧 **Services** - API server and dashboard status indicators
+- 🚀 **Enterprise Features** - SIEM, AI Detection, Compliance tools (all FREE)
+
+**Right Panel (Main Dashboard):**
+- 🎛️ **Top Menu** - File, Capture, View, Tools, Help menus
+- ⚙️ **Control Bar** - Network interface selection, Start/Stop buttons, live search
+- 📋 **Main Content** - Tabbed interface with:
+  - **Live** - Real-time packet capture table with threat indicators
+  - **Analysis** - Advanced threat analysis and forensics
+  - **Statistics** - Charts, graphs, and network performance metrics
+  - **Alerts** - Security alerts and notifications management
+
+### **Professional Features**
+- 🎨 **Dark Theme** - Professional security tool appearance
+- 🎯 **Color-coded Threats** - Green (Safe), Yellow (Suspicious), Red (Threat)
+- 📊 **Real-time Counters** - Live packets/sec and threats/sec displays
+- 🔍 **Advanced Filtering** - Quick search and filter capabilities
+
+---
+
+## � Documentation & Guides
+
+### **📋 Installation & Setup**
+- **[📖 Installation Guide](INSTALLATION.md)** - Complete installation instructions with troubleshooting
+- **[🧪 Testing Instructions](TESTING_INSTRUCTIONS.md)** - Guide for external testers and validation
+- **[🖥️ Desktop App Guide](DESKTOP_APP_README.md)** - Comprehensive application usage manual
+
+### **🔧 Technical Documentation**
+- **[⚙️ Configuration Guide](docs/configuration.md)** - System configuration and optimization
+- **[🌐 API Documentation](docs/api.md)** - REST API endpoints and integration
+- **[🔌 SIEM Integration](docs/siem-integration.md)** - Enterprise system integration
+
+### **🤝 Community & Support**
+- **[💬 GitHub Issues](https://github.com/srivathsavsree/CyberSnoop/issues)** - Bug reports and feature requests
+- **[📚 GitHub Wiki](https://github.com/srivathsavsree/CyberSnoop/wiki)** - Community documentation
+- **[🌟 GitHub Discussions](https://github.com/srivathsavsree/CyberSnoop/discussions)** - Community support and ideas
+
+---
+
+## 🏆 Project Achievements
+
+### **🎉 100% Free & Open Source Transformation**
+CyberSnoop has been successfully transformed from a commercial product to a **completely free, open-source solution**:
+
+- ✅ **All Enterprise Features Free** - SIEM integration, AI/ML detection, compliance reporting
+- ✅ **No Restrictions** - Complete feature access for all users
+- ✅ **MIT License** - Pure open-source with community development
+- ✅ **Professional Quality** - Enterprise-grade capabilities without licensing costs
+
+### **🚀 Technical Excellence**
+Built with modern technologies and professional standards:
+
+- ✅ **Desktop Application** - Professional PySide6 GUI with Windows integration
+- ✅ **Real-time Monitoring** - 10,000+ packets/second processing capability
+- ✅ **Advanced Detection** - 6 AI/ML algorithms for threat identification
+- ✅ **Modern Dashboard** - React/Next.js web interface with live visualizations
+- ✅ **REST API** - FastAPI server with real-time WebSocket streaming
+- ✅ **Database Integration** - SQLAlchemy ORM with performance optimization
+
+---
+
+## 🔧 Developer Information
+
+### **🛠️ Alternative Installation Methods**
+
+**For Developers:**
 ```bash
 git clone https://github.com/srivathsavsree/CyberSnoop.git
 cd CyberSnoop
-pip install -e .
-python create_desktop_icon.py
+pip install -r requirements.txt
+python desktop_app/enhanced_cybersnoop_desktop.py
 ```
 
-### 🎯 **Option 3: One-Command Setup**
+**For Python Developers:**
 ```bash
 pip install git+https://github.com/srivathsavsree/CyberSnoop.git
 ```
 
----
-
-## 📊 Development Progress & Achievements
-
-### 🎉 **Project Transformation Success**
-CyberSnoop has been successfully transformed from a commercial product to a **100% free, open-source solution**! This transformation included:
-
-- ✅ **Removed All Commercial Content** - Deleted all pricing, billing, and enterprise-only restrictions
-- ✅ **Feature Liberation** - All enterprise features (SIEM, AI/ML, compliance) now free for everyone
-- ✅ **License Simplification** - Pure MIT license with no restrictions
-- ✅ **Community Focus** - GitHub-based support and development model
-- ✅ **Free Infrastructure** - GitHub Pages hosting, Actions CI/CD, free releases
-
-### 📅 **Day-by-Day Development Progress**
-
-#### **Phase 1: Foundation (Days 1-4) ✅**
-**Objective**: Establish project structure and core network monitoring
-
-**Completed Features:**
-- ✅ **Professional Desktop Application** - PySide6-based GUI with modern Windows integration
-- ✅ **Real-time Packet Capture** - Scapy-based monitoring with 12+ packet categories
-- ✅ **Advanced Threat Detection** - Port scan, brute force, malware, DDoS detection
-- ✅ **Database Integration** - SQLite with retention policies and performance optimization
-- ✅ **System Integration** - Windows UAC handling, system tray, splash screen
-- ✅ **Comprehensive Testing** - 33 unit tests with 100% core functionality coverage
-
-**Key Achievements:**
-- Built enterprise-grade foundation in just 4 days
-- Implemented advanced packet analysis (10,000+ packets/second)
-- Created professional UI with embedded browser component
-- Established robust error handling and logging system
-
-#### **Phase 2: Core Enhancement (Days 5-7) ✅**
-**Objective**: Advanced database integration and API development
-
-**Completed Features:**
-- ✅ **Enhanced Database** - SQLAlchemy ORM with advanced queries and relationships
-- ✅ **Complete REST API** - FastAPI server with authentication and rate limiting
-- ✅ **Real-time Streaming** - WebSocket integration for live data updates
-- ✅ **6 Advanced Algorithms** - Sophisticated threat detection with machine learning
-- ✅ **Performance Optimization** - Memory management and CPU optimization
-- ✅ **API Documentation** - Automatic OpenAPI/Swagger documentation
-
-**Key Achievements:**
-- Built professional-grade API server architecture
-- Implemented real-time data streaming capabilities
-- Created advanced threat detection algorithms
-- Established scalable database architecture
-
-#### **Phase 3: Enterprise Features (Days 8-10) ✅**
-**Objective**: Professional dashboard and enterprise integrations
-
-**Completed Features:**
-- ✅ **React Dashboard** - Modern Next.js application with real-time charts
-- ✅ **Professional UI** - Tailwind CSS with shadcn/ui components
-- ✅ **Real-time Visualizations** - Charts, graphs, and interactive dashboards
-- ✅ **Complete Integration** - Seamless desktop app ↔ web dashboard communication
-- ✅ **Advanced Analytics** - Statistical analysis and trend detection
-- ✅ **Export Capabilities** - CSV, JSON, PDF report generation
-
-**Key Achievements:**
-- Built production-ready React dashboard
-- Implemented real-time data visualization
-- Created seamless desktop-web integration
-- Established enterprise-grade reporting
-
-#### **🚀 Bonus Phase: Free Transformation (Days 7+) ✅**
-**Objective**: Transform to 100% free, open-source solution
-
-**Completed Transformations:**
-- ✅ **Business Model Change** - Removed all commercial/enterprise restrictions
-- ✅ **Documentation Overhaul** - Rewrote all docs to reflect free nature
-- ✅ **Code Liberation** - Removed feature gating, made all features free
-- ✅ **Deployment Infrastructure** - GitHub Pages, Actions, and Releases setup
-- ✅ **Community Model** - GitHub Issues for support, community-driven development
-- ✅ **UI/UX Improvements** - Enhanced desktop app with better visibility and usability
-
-**Key Achievements:**
-- Successfully transformed commercial product to free/open-source
-- Established sustainable community development model
-- Created comprehensive documentation and testing framework
-- Built automated deployment and release pipeline
-
-### 🏆 **Major Milestones Achieved**
-
-| **Milestone** | **Status** | **Achievement** |
-|---------------|------------|-----------------|
-| **Desktop Application** | ✅ Complete | Professional PySide6 app with all features |
-| **Network Monitoring** | ✅ Complete | Real-time packet capture and analysis |
-| **Threat Detection** | ✅ Complete | 6 advanced algorithms with AI/ML |
-| **Database System** | ✅ Complete | SQLAlchemy ORM with performance optimization |
-| **API Server** | ✅ Complete | FastAPI with authentication and real-time streaming |
-| **React Dashboard** | ✅ Complete | Modern Next.js app with live visualizations |
-| **Enterprise Features** | ✅ Complete | SIEM, compliance, cloud monitoring - all free |
-| **Free Transformation** | ✅ Complete | 100% open-source with community support |
-| **Documentation** | ✅ Complete | Comprehensive guides and testing procedures |
-| **Deployment** | ✅ Complete | Automated builds, releases, and GitHub Pages |
+### **🏗️ Architecture Overview**
+- **Frontend**: PySide6 (Desktop) + React/Next.js (Dashboard)
+- **Backend**: FastAPI (REST API) + SQLAlchemy (Database)
+- **Monitoring**: Scapy (Packet Capture) + Custom ML Algorithms
+- **Integration**: WebSocket (Real-time) + SIEM APIs
 
 ---
 
-## 🖥️ System Requirements
+## 🤝 Contributing & Community
 
-### **Your PC is Perfect!** ✅
-**Confirmed Compatible**: Intel i3, 8GB RAM, Windows 11
-- ✅ **CPU**: i3 exceeds minimum requirements (i3-8100 recommended)
-- ✅ **RAM**: 8GB is perfect (CyberSnoop uses only 200-800MB)
-- ✅ **OS**: Windows 11 is fully supported
-- ✅ **Storage**: Only 2GB needed (plenty of space available)
+### **🌟 How to Contribute**
+1. **⭐ Star the Repository** - Show your support
+2. **🐛 Report Issues** - Help us improve by reporting bugs
+3. **💡 Suggest Features** - Share your ideas for new capabilities
+4. **🔧 Submit Pull Requests** - Contribute code improvements
+5. **📚 Improve Documentation** - Help others understand CyberSnoop
 
-### **Minimum Requirements**
-- **OS**: Windows 10 (64-bit) or Windows 11
-- **CPU**: Intel Core i3-8100 / AMD Ryzen 3 2200G
+### **📧 Contact & Support**
+- **🐛 Bug Reports**: [GitHub Issues](https://github.com/srivathsavsree/CyberSnoop/issues)
+- **💬 Discussions**: [GitHub Discussions](https://github.com/srivathsavsree/CyberSnoop/discussions)
+- **📖 Documentation**: [GitHub Wiki](https://github.com/srivathsavsree/CyberSnoop/wiki)
+- **⭐ Star Us**: [GitHub Repository](https://github.com/srivathsavsree/CyberSnoop)
 - **RAM**: 8 GB (CyberSnoop uses 200-800 MB)
 - **Storage**: 2 GB free space
 - **Network**: Ethernet/Wi-Fi with admin privileges
@@ -256,126 +247,34 @@ CyberSnoop has been successfully transformed from a commercial product to a **10
 
 ## 🎯 Why Choose CyberSnoop?
 
-### **✅ Completely Free Forever**
-- **No Licensing Costs** - Save $10,000+ annually compared to commercial solutions
-- **No Feature Restrictions** - All enterprise features included at no cost
-- **No User Limits** - Deploy on unlimited systems
-- **No Support Fees** - Community-driven support model
-
-### **🏆 Enterprise-Grade Quality**
-- **Professional UI/UX** - Modern React dashboard with real-time visualizations
-- **Advanced Analytics** - AI-powered threat detection and behavioral analysis
-- **Scalable Architecture** - Handles 10,000+ packets/second with optimized performance
-- **Production Ready** - Comprehensive testing and validation (100+ test cases)
-
-### **🚀 Modern Technology Stack**
-- **Python 3.11+** - Latest Python with modern features
-- **PySide6** - Professional desktop application framework
-- **React/Next.js** - Modern web dashboard with real-time updates
-- **FastAPI** - High-performance API server with automatic documentation
-- **SQLAlchemy** - Advanced database ORM with optimization
-
-### **🌟 Active Development**
-- **Regular Updates** - Automated releases and continuous improvement
-- **Community Contributions** - Open-source development model
-- **Modern CI/CD** - GitHub Actions for automated testing and deployment
-- **Documentation Focus** - Comprehensive guides and tutorials
-
 ---
 
-## 🔧 Technical Architecture
+## 📄 License & Final Notes
 
-### **Desktop Application**
-- **Framework**: PySide6 (Qt6) for native Windows integration
-- **Packet Capture**: Scapy with Npcap for high-performance monitoring
-- **Database**: SQLite with SQLAlchemy ORM for data persistence
-- **UI**: Modern desktop interface with embedded web browser
+This project is licensed under the **MIT License** - see the [LICENSE.md](LICENSE.md) file for details.
 
-### **API Server**
-- **Framework**: FastAPI with automatic OpenAPI documentation
-- **Authentication**: JWT-based security with rate limiting
-- **Real-time**: WebSocket integration for live data streaming
-- **Performance**: Optimized for high-throughput packet processing
+### **🎯 100% Free Forever Promise**
+- ✅ **No Licensing Costs** - Save $10,000+ annually vs commercial solutions
+- ✅ **No Feature Restrictions** - All enterprise features included
+- ✅ **No User Limits** - Deploy on unlimited systems  
+- ✅ **No Hidden Costs** - Community-driven support model
 
-### **Web Dashboard**
-- **Framework**: Next.js with React 18 and TypeScript
-- **UI Library**: Tailwind CSS with shadcn/ui components
-- **Charts**: Real-time data visualization with modern charting
-- **Responsive**: Mobile-friendly design with modern UX
-
-### **Threat Detection**
-- **Algorithms**: 6 advanced detection methods with machine learning
-- **Performance**: Real-time analysis with minimal false positives
-- **Extensible**: Plugin architecture for custom threat detection
-- **AI Integration**: Anomaly detection and behavioral analysis
-
----
-
-## 🎉 Success Stories
-
-### **Transformation Achievement**
-CyberSnoop's transformation from a commercial product to a 100% free, open-source solution represents a significant achievement in making enterprise-grade network security accessible to everyone. Key accomplishments:
-
-- **🎯 Mission Accomplished**: Successfully removed all commercial restrictions
-- **📊 Full Feature Liberation**: All enterprise features now free for everyone
-- **🏆 Community Success**: Established active open-source development model
-- **🚀 Production Ready**: Comprehensive testing and validation completed
-- **🌟 Documentation Excellence**: Created extensive guides and tutorials
-
-### **Real-World Impact**
-- **Cost Savings**: Organizations save $10,000+ annually vs commercial solutions
-- **Accessibility**: Students and researchers get enterprise-grade tools for free
-- **Innovation**: Community-driven development enables rapid feature improvements
-- **Transparency**: Open-source model ensures complete visibility and customization
-
----
-
-## 📈 Future Roadmap
-
-### **Planned Enhancements**
-- **Linux Support** - Expand beyond Windows platform
-- **MacOS Support** - Complete cross-platform compatibility
-- **Mobile App** - iOS/Android monitoring and control
-- **Cloud Integration** - Enhanced multi-cloud monitoring
-- **AI Improvements** - Advanced machine learning algorithms
-- **Plugin System** - Community-contributed threat detection plugins
-
-### **Community Goals**
-- **1000+ GitHub Stars** - Growing community recognition
-- **100+ Contributors** - Active open-source development
-- **Enterprise Adoption** - Production use in organizations
-- **Educational Impact** - University and training program adoption
-
----
-
-## 📞 Contact & Links
-
-### **Official Links**
-- 🏠 **Website**: [CyberSnoop GitHub Pages](https://srivathsavsree.github.io/CyberSnoop/)
-- 📦 **Releases**: [GitHub Releases](https://github.com/srivathsavsree/CyberSnoop/releases)
-- 📋 **Repository**: [GitHub Repository](https://github.com/srivathsavsree/CyberSnoop)
-- 💬 **Issues**: [GitHub Issues](https://github.com/srivathsavsree/CyberSnoop/issues)
-
-### **Community**
-- 🤝 **Contribute**: Submit pull requests and improvements
-- 📖 **Learn**: Read documentation and guides
-- 💡 **Suggest**: Request features and enhancements
-- 🐛 **Report**: Help improve quality by reporting bugs
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
-
-**🎯 100% Free Forever** - No restrictions, no limitations, no costs!
+### **🌟 Key Benefits**
+- **Enterprise-Grade Quality** - Professional features without enterprise pricing
+- **Active Development** - Regular updates and community contributions
+- **Modern Technology** - Built with latest frameworks and best practices
+- **Complete Transparency** - Open-source code with full visibility
 
 ---
 
 <div align="center">
 
-**⭐ Star this repository if CyberSnoop helps you!**
+**📥 [Download CyberSnoop Now](https://github.com/srivathsavsree/CyberSnoop/releases/latest/download/CyberSnoop-Setup.exe)**
+
+**⭐ [Star this repository](https://github.com/srivathsavsree/CyberSnoop) if CyberSnoop helps you!**
 
 **🔥 Made with ❤️ for the cybersecurity community**
+
+*Transform your network security with professional-grade monitoring - completely free!*
 
 </div>
